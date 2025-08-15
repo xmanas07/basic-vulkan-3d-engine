@@ -33,6 +33,7 @@
     <None Include="shaders\simple_shader.vert">
       <Filter>shaders</Filter>
     </None>
+    <None Include="Makefile" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="first_app.cpp">
