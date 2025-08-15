@@ -47,7 +47,7 @@ namespace lve {
 		LvePipeline::defaultPipelineConfigInfo(pipelineConfig, lveSwapChain.width(), lveSwapChain.height());
 		pipelineConfig.renderPass = lveSwapChain.getRenderPass();
 		pipelineConfig.pipelineLayout = pipelineLayout;
-		lvePipeline = std::make_unique<LvePipeline>(lveDevice, "simple_shader.vert.spv", "simple_shader.frag.spv", pipelineConfig);
+		lvePipeline = std::make_unique<LvePipeline>(lveDevice, "shaders/simple_shader.vert.spv", "shaders/simple_shader.frag.spv", pipelineConfig);
 	}
 	void FirstApp::createCommandBuffers()
 	{

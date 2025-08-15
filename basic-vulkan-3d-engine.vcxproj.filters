@@ -18,19 +18,19 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="compile.bat">
+    <None Include="shaders\simple_shader.vert.spv">
       <Filter>shaders</Filter>
     </None>
-    <None Include="simple_shader.frag">
+    <None Include="shaders\compile.bat">
       <Filter>shaders</Filter>
     </None>
-    <None Include="simple_shader.frag.spv">
+    <None Include="shaders\simple_shader.frag">
       <Filter>shaders</Filter>
     </None>
-    <None Include="simple_shader.vert">
+    <None Include="shaders\simple_shader.frag.spv">
       <Filter>shaders</Filter>
     </None>
-    <None Include="simple_shader.vert.spv">
+    <None Include="shaders\simple_shader.vert">
       <Filter>shaders</Filter>
     </None>
   </ItemGroup>
