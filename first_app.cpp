@@ -4,12 +4,15 @@
 //std
 #include <stdexcept>
 #include <array>
+#include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
 
 
 
 namespace lve {
 	FirstApp::FirstApp()
 	{
+		loadModels();
 		createPipelineLayout();
 		createPipeline();
 		createCommandBuffers();
@@ -27,6 +30,48 @@ namespace lve {
 
 		vkDeviceWaitIdle(lveDevice.device());
 	}
+
+	 void drawSierpTriangle(const std::vector<LveModel::Vertex> baseTriangle, int depth,std::vector<LveModel::Vertex>& vertices) {
+		if (depth < 1) {
+			vertices.insert(vertices.end(), baseTriangle.begin(), baseTriangle.end());
+			return;
+		}
+		std::vector<LveModel::Vertex> triangles[4];
+
+		glm::vec2 vert0 = baseTriangle.at(0).position;
+		glm::vec2 vert1 = baseTriangle.at(1).position;
+		glm::vec2 vert2 = baseTriangle.at(2).position;
+
+		glm::vec3 cvert0 = baseTriangle.at(0).color;
+		glm::vec3 cvert1 = baseTriangle.at(1).color;
+		glm::vec3 cvert2 = baseTriangle.at(2).color;
+		
+		LveModel::Vertex vert01 = { { 0.5f * (vert0 + vert1)}, {0.5f * (cvert0 + cvert1) } };
+		LveModel::Vertex vert12 = { { 0.5f * (vert1 + vert2)}, {0.5f * (cvert1 + cvert2) } };
+		LveModel::Vertex vert02 = { { 0.5f * (vert0 + vert2)}, {0.5f * (cvert0 + cvert2) } };
+		
+		std::vector<LveModel::Vertex> t1{ baseTriangle[0], vert01, vert02 };
+		std::vector<LveModel::Vertex> t2{ baseTriangle[1], vert12, vert01 };
+		std::vector<LveModel::Vertex> t3{ baseTriangle[2], vert02, vert12 };
+		
+		
+		drawSierpTriangle(t1, depth - 1, vertices);
+		drawSierpTriangle(t2, depth - 1, vertices);
+		drawSierpTriangle(t3, depth - 1, vertices);
+	}
+
+	void FirstApp::loadModels() {
+		std::vector<LveModel::Vertex> baseTriangle{
+			{{0.0f, -0.5f}, {1.0f,0.0f,0.0f}},
+			{{0.5f,  0.5f}, {0.0f,1.0f,0.0f}},
+			{{-0.5f, 0.5f}, {0.0f,0.0f,1.0f}}
+		};
+		std::vector<LveModel::Vertex> vertices;
+		drawSierpTriangle(baseTriangle, 4, vertices);
+
+		lveModel = std::make_unique<LveModel>(lveDevice, vertices);
+	}
+
 	void FirstApp::createPipelineLayout()
 	{
 		VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
@@ -90,7 +135,8 @@ namespace lve {
 			vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
 			lvePipeline->bind(commandBuffers[i]);
-			vkCmdDraw(commandBuffers[i], 3, 1, 0, 0);
+			lveModel->bind(commandBuffers[i]);
+			lveModel->draw(commandBuffers[i]);
 
 			vkCmdEndRenderPass(commandBuffers[i]);
 			if (vkEndCommandBuffer(commandBuffers[i]) != VK_SUCCESS) {
