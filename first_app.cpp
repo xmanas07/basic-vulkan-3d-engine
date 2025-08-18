@@ -77,14 +77,14 @@ namespace lve {
 			{{-.4f, .8f}, {0.0f,0.0f,1.0f}}
 		};
 		std::vector<LveModel::Vertex> vertices;
-		drawSierpTriangle(baseTriangle, 4, vertices);
+		drawSierpTriangle(baseTriangle, 0, vertices);
 
 		auto lveModel = std::make_shared<LveModel>(lveDevice, vertices);
 		auto triangle = LveGameObject::createGameObject();
 		triangle.model = lveModel;
 		triangle.color = { .1f,.8f,.1f };
-		triangle.transform2d.translation.x = .5f;
-		triangle.transform2d.scale = {1.f,1.0f};
+		triangle.transform2d.translation.x = .0f;
+		triangle.transform2d.scale = {0.5f,.5f};
 		triangle.transform2d.rotation = .25f * glm::two_pi<float>();
 
 		gameObjects.push_back(std::move(triangle));
@@ -207,7 +207,7 @@ namespace lve {
 	{
 		lvePipeline->bind(commandBuffer);
 		for (auto& obj : gameObjects) {
-			obj.transform2d.rotation = glm::mod(obj.transform2d.rotation + 0.1f, glm::two_pi<float>());
+			obj.transform2d.rotation = glm::mod(obj.transform2d.rotation + 0.01f, glm::two_pi<float>());
 
 			SimplePushConstantData push{};
 			push.offset = obj.transform2d.translation;
