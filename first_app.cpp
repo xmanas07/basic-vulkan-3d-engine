@@ -1,18 +1,28 @@
 #include "first_app.hpp"
 
+// libs
+#define GLM_FORCE_RADIANS
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
+#include <glm/glm.hpp>
+#include <glm/gtc/constants.hpp>
 
 //std
 #include <stdexcept>
 #include <array>
-#include <glm/vec2.hpp>
-#include <glm/vec3.hpp>
 
 
 
 namespace lve {
+
+	struct SimplePushConstantData {
+		glm::mat2 transform{ 1.f };
+		glm::vec2 offset;
+		alignas(16) glm::vec3 color;
+	};
+
 	FirstApp::FirstApp()
 	{
-		loadModels();
+		loadGameObjects();
 		createPipelineLayout();
 		recreateSwapChain();
 		createCommandBuffers();
@@ -60,26 +70,39 @@ namespace lve {
 		drawSierpTriangle(t3, depth - 1, vertices);
 	}
 
-	void FirstApp::loadModels() {
+	void FirstApp::loadGameObjects() {
 		std::vector<LveModel::Vertex> baseTriangle{
-			{{0.0f, -0.5f}, {1.0f,0.0f,0.0f}},
-			{{0.5f,  0.5f}, {0.0f,1.0f,0.0f}},
-			{{-0.5f, 0.5f}, {0.0f,0.0f,1.0f}}
+			{{0.0f, 0.0f}, {1.0f,0.0f,0.0f}},
+			{{.4f,  .8f}, {0.0f,1.0f,0.0f}},
+			{{-.4f, .8f}, {0.0f,0.0f,1.0f}}
 		};
 		std::vector<LveModel::Vertex> vertices;
-		//drawSierpTriangle(baseTriangle, 4, vertices);
+		drawSierpTriangle(baseTriangle, 4, vertices);
 
-		lveModel = std::make_unique<LveModel>(lveDevice, baseTriangle);
+		auto lveModel = std::make_shared<LveModel>(lveDevice, vertices);
+		auto triangle = LveGameObject::createGameObject();
+		triangle.model = lveModel;
+		triangle.color = { .1f,.8f,.1f };
+		triangle.transform2d.translation.x = .5f;
+		triangle.transform2d.scale = {1.f,1.0f};
+		triangle.transform2d.rotation = .25f * glm::two_pi<float>();
+
+		gameObjects.push_back(std::move(triangle));
 	}
 
 	void FirstApp::createPipelineLayout()
 	{
+		VkPushConstantRange pushConstantRange{};
+		pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
+		pushConstantRange.offset = 0;
+		pushConstantRange.size = sizeof(SimplePushConstantData);
+
 		VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
 		pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 		pipelineLayoutInfo.setLayoutCount = 0;
 		pipelineLayoutInfo.pSetLayouts = nullptr;
-		pipelineLayoutInfo.pushConstantRangeCount = 0;
-		pipelineLayoutInfo.pPushConstantRanges = nullptr;
+		pipelineLayoutInfo.pushConstantRangeCount = 1;
+		pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange;
 		if (vkCreatePipelineLayout(lveDevice.device(), &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS)
 		{
 			throw std::runtime_error("failed to create pipeline layout!");
@@ -154,7 +177,7 @@ namespace lve {
 		renderPassInfo.renderArea.extent = lveSwapChain->getSwapChainExtent();
 
 		std::array<VkClearValue, 2> clearValues{};
-		clearValues[0].color = { 0.1f, 0.1f, 0.1f, 1.0f };
+		clearValues[0].color = { 0.01f, 0.01f, 0.01f, 1.0f };
 		clearValues[1].depthStencil = { 1.0f, 0 };
 		renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
 		renderPassInfo.pClearValues = clearValues.data();
@@ -172,14 +195,31 @@ namespace lve {
 		vkCmdSetViewport(commandBuffers[imageIndex], 0, 1, &viewport);
 		vkCmdSetScissor(commandBuffers[imageIndex], 0, 1, &scissor);
 
-		lvePipeline->bind(commandBuffers[imageIndex]);
-		lveModel->bind(commandBuffers[imageIndex]);
-		lveModel->draw(commandBuffers[imageIndex]);
+		renderGameObjects(commandBuffers[imageIndex]);
 
 		vkCmdEndRenderPass(commandBuffers[imageIndex]);
 		if (vkEndCommandBuffer(commandBuffers[imageIndex]) != VK_SUCCESS) {
 			throw std::runtime_error("failed to record command buffer!");
 		}
+	}
+
+	void FirstApp::renderGameObjects(VkCommandBuffer commandBuffer)
+	{
+		lvePipeline->bind(commandBuffer);
+		for (auto& obj : gameObjects) {
+			obj.transform2d.rotation = glm::mod(obj.transform2d.rotation + 0.1f, glm::two_pi<float>());
+
+			SimplePushConstantData push{};
+			push.offset = obj.transform2d.translation;
+			push.color = obj.color;
+			push.transform = obj.transform2d.mat2();
+
+			vkCmdPushConstants(commandBuffer, pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(SimplePushConstantData), &push);
+			obj.model->bind(commandBuffer);
+			obj.model->draw(commandBuffer);
+
+		}
+		
 	}
 
 	void FirstApp::drawFrame()
