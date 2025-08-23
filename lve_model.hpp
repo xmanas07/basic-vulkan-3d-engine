@@ -17,6 +17,38 @@ namespace lve {
 		struct Vertex {
 			glm::vec3 position;
 			glm::vec3 color;
+            // Add two vertices
+            Vertex operator+(const Vertex& other) const {
+                return { position + other.position, color + other.color };
+            }
+
+            // Subtract two vertices
+            Vertex operator-(const Vertex& other) const {
+                return { position - other.position, color - other.color };
+            }
+
+            // Multiply by scalar
+            Vertex operator*(float scalar) const {
+                return { position * scalar, color * scalar };
+            }
+
+            // Divide by scalar
+            Vertex operator/(float scalar) const {
+                return { position / scalar, color / scalar };
+            }
+
+            // Compound operators (optional, for +=, *=, etc.)
+            Vertex& operator+=(const Vertex& other) {
+                position += other.position;
+                color += other.color;
+                return *this;
+            }
+
+            Vertex& operator*=(float scalar) {
+                position *= scalar;
+                color *= scalar;
+                return *this;
+            }
 
 		};
 
