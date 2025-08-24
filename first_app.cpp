@@ -30,6 +30,8 @@ namespace lve {
 	void FirstApp::run() {
 		SimpleRenderSystem simpleRenderSystem{ lveDevice, lveRenderer.getSwapchainRenderPass() };
 		LveCamera camera{};
+		//camera.setViewDirection(glm::vec3(0.f), glm::vec3(0.5f, 0.f, 1.f));
+		camera.setViewTarget(glm::vec3(-1.f, -2.f, 2.f), glm::vec3(0.f, 0.f, 2.5f));
 
 		while (!lveWindow.shouldClose()) {
 			glfwPollEvents();
@@ -174,12 +176,12 @@ namespace lve {
 		return std::make_unique<LveModel>(device, vertices);
 	}
 	void FirstApp::loadGameObjects() {
-		/*std::shared_ptr<LveModel> lveModel = createCubeModel(lveDevice, { .0f,.0f,.0f });
+		std::shared_ptr<LveModel> lveModel = createCubeModel(lveDevice, { .0f,.0f,.0f });
 		auto cube = LveGameObject::createGameObject();
 		cube.model = lveModel;
-		cube.transform.translation = { .0f,.0f,2.f };
-		cube.transform.scale = { .5f,.5f,.5f };
-		gameObjects.push_back(std::move(cube));*/
+		cube.transform.translation = { .0f,.0f,2.5f };
+		cube.transform.scale = { .1f,.1f,.1f };
+		gameObjects.push_back(std::move(cube));
 
 		std::array<LveModel::Vertex, 4> pyramidVertices;
 		pyramidVertices[0] = { {.0f,-.5f,.5f},{1.f,1.f,1.f} };
@@ -189,7 +191,7 @@ namespace lve {
 		std::shared_ptr<LveModel> lvePyramidModel = createSierpPyramidModel(lveDevice, pyramidVertices, 3);
 		auto sierpPyramid = LveGameObject::createGameObject();
 		sierpPyramid.model = lvePyramidModel;
-		sierpPyramid.transform.translation = { .0f,.0f,1.f };
+		sierpPyramid.transform.translation = { .0f,.0f,2.5f };
 		sierpPyramid.transform.scale = { .5f,.5f,.5f };
 		gameObjects.push_back(std::move(sierpPyramid));
 	}
