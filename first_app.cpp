@@ -49,6 +49,7 @@ namespace lve {
 			frameTime = glm::min(frameTime, FirstApp::MAX_ALOWABLE_FRAMETIME);
 
 			cameraController.moveInPlaneXZ(lveWindow.getGLFWwindow(), frameTime, viewerObject);
+			gameObjects[0].transform.rotation.y += 1.f * frameTime;
 			camera.setViewYXZ(viewerObject.transform.translation, viewerObject.transform.rotation);
 
 			float aspect = lveRenderer.getAspectRatio();
@@ -146,11 +147,12 @@ namespace lve {
 		return std::make_unique<LveModel>(device, modelBuilder);
 	}
 	void FirstApp::loadGameObjects() {
-		std::shared_ptr<LveModel> lveModel = LveModel::createModelFromFile(lveDevice, "models/smooth_vase.obj");
+		std::shared_ptr<LveModel> lveModel = LveModel::createModelFromFile(lveDevice, "models/rat.obj");
 		auto gameObject = LveGameObject::createGameObject();
 		gameObject.model = lveModel;
 		gameObject.transform.translation = { .0f,.0f,2.5f };
-		gameObject.transform.scale = { 1.f,1.f,1.f };
+		gameObject.transform.scale = { .01f,-.01f,.01f };
+		gameObject.color = { .13f,.06f,.025f };
 		gameObjects.push_back(std::move(gameObject));
 
 		std::array<LveModel::Vertex, 4> pyramidVertices;
@@ -163,7 +165,7 @@ namespace lve {
 		sierpPyramid.model = lvePyramidModel;
 		sierpPyramid.transform.translation = { .0f,.0f,2.5f };
 		sierpPyramid.transform.scale = { .5f,.5f,.5f };
-		gameObjects.push_back(std::move(sierpPyramid));
+		//gameObjects.push_back(std::move(sierpPyramid));
 	}
 
 }
