@@ -15,6 +15,7 @@ namespace lve {
 	public:
 		static constexpr int WIDTH = 800;
 		static constexpr int HEIGHT = 800;
+		static constexpr float MAX_ALOWABLE_FRAMETIME = .067f;
 
 		FirstApp();
 		~FirstApp();
