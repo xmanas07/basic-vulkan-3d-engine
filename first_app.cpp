@@ -71,61 +71,52 @@ namespace lve {
 	}
 	
 	std::unique_ptr<LveModel> createCubeModel(LveDevice& device, glm::vec3 offset) {
-		std::vector<LveModel::Vertex> vertices{
-
+		LveModel::Builder modelBuilder{};
+		modelBuilder.vertices = {
 			// left face (white)
 			{{-.5f, -.5f, -.5f}, {.9f, .9f, .9f}},
 			{{-.5f, .5f, .5f}, {.9f, .9f, .9f}},
 			{{-.5f, -.5f, .5f}, {.9f, .9f, .9f}},
-			{{-.5f, -.5f, -.5f}, {.9f, .9f, .9f}},
 			{{-.5f, .5f, -.5f}, {.9f, .9f, .9f}},
-			{{-.5f, .5f, .5f}, {.9f, .9f, .9f}},
 
 			// right face (yellow)
 			{{.5f, -.5f, -.5f}, {.8f, .8f, .1f}},
 			{{.5f, .5f, .5f}, {.8f, .8f, .1f}},
 			{{.5f, -.5f, .5f}, {.8f, .8f, .1f}},
-			{{.5f, -.5f, -.5f}, {.8f, .8f, .1f}},
 			{{.5f, .5f, -.5f}, {.8f, .8f, .1f}},
-			{{.5f, .5f, .5f}, {.8f, .8f, .1f}},
 
 			// top face (orange, remember y axis points down)
 			{{-.5f, -.5f, -.5f}, {.9f, .6f, .1f}},
 			{{.5f, -.5f, .5f}, {.9f, .6f, .1f}},
 			{{-.5f, -.5f, .5f}, {.9f, .6f, .1f}},
-			{{-.5f, -.5f, -.5f}, {.9f, .6f, .1f}},
 			{{.5f, -.5f, -.5f}, {.9f, .6f, .1f}},
-			{{.5f, -.5f, .5f}, {.9f, .6f, .1f}},
 
 			// bottom face (red)
 			{{-.5f, .5f, -.5f}, {.8f, .1f, .1f}},
 			{{.5f, .5f, .5f}, {.8f, .1f, .1f}},
 			{{-.5f, .5f, .5f}, {.8f, .1f, .1f}},
-			{{-.5f, .5f, -.5f}, {.8f, .1f, .1f}},
 			{{.5f, .5f, -.5f}, {.8f, .1f, .1f}},
-			{{.5f, .5f, .5f}, {.8f, .1f, .1f}},
 
 			// nose face (blue)
 			{{-.5f, -.5f, 0.5f}, {.1f, .1f, .8f}},
 			{{.5f, .5f, 0.5f}, {.1f, .1f, .8f}},
 			{{-.5f, .5f, 0.5f}, {.1f, .1f, .8f}},
-			{{-.5f, -.5f, 0.5f}, {.1f, .1f, .8f}},
 			{{.5f, -.5f, 0.5f}, {.1f, .1f, .8f}},
-			{{.5f, .5f, 0.5f}, {.1f, .1f, .8f}},
 
 			// tail face (green)
 			{{-.5f, -.5f, -0.5f}, {.1f, .8f, .1f}},
 			{{.5f, .5f, -0.5f}, {.1f, .8f, .1f}},
 			{{-.5f, .5f, -0.5f}, {.1f, .8f, .1f}},
-			{{-.5f, -.5f, -0.5f}, {.1f, .8f, .1f}},
 			{{.5f, -.5f, -0.5f}, {.1f, .8f, .1f}},
-			{{.5f, .5f, -0.5f}, {.1f, .8f, .1f}},
-
 		};
-		for (auto& v : vertices) {
+		for (auto& v : modelBuilder.vertices) {
 			v.position += offset;
 		}
-		return std::make_unique<LveModel>(device, vertices);
+
+		modelBuilder.indices = { 0,  1,  2,  0,  3,  1,  4,  5,  6,  4,  7,  5,  8,  9,  10, 8,  11, 9,
+								12, 13, 14, 12, 15, 13, 16, 17, 18, 16, 19, 17, 20, 21, 22, 20, 23, 21 };
+
+		return std::make_unique<LveModel>(device, modelBuilder);
 	}
 	std::unique_ptr<LveModel> createSierpPyramidModel(LveDevice& device, const std::array<LveModel::Vertex, 4>& peaks, int depth) {
 		int nPyramids = static_cast<uint32_t>(std::pow(4, depth));
@@ -166,29 +157,41 @@ namespace lve {
 			helpPyramidVector.clear();
 		}
 
-		std::vector<LveModel::Vertex> vertices;
-		vertices.reserve(nPyramids*4*3);
+		LveModel::Builder modelBuilder{};
+		modelBuilder.vertices.reserve(nPyramids*4);
+		modelBuilder.indices.reserve(nPyramids*4*3);
+
+		int pyramidIdx = 0;
 		for (const std::array<LveModel::Vertex, 4>& pyramidVertexes : outPyramidVector) {
-			// create triangles vertices
+			//emplace pyramid vertices67
+			modelBuilder.vertices.emplace_back(pyramidVertexes[0]);
+			modelBuilder.vertices.emplace_back(pyramidVertexes[1]);
+			modelBuilder.vertices.emplace_back(pyramidVertexes[2]);
+			modelBuilder.vertices.emplace_back(pyramidVertexes[3]);
+
+			// create triangles indices
 			// triangle face 1
-			vertices.emplace_back(pyramidVertexes[0]);
-			vertices.emplace_back(pyramidVertexes[1]);
-			vertices.emplace_back(pyramidVertexes[2]);
+			int offset = pyramidIdx * 4;
+			modelBuilder.indices.emplace_back(0 + offset);
+			modelBuilder.indices.emplace_back(1 + offset);
+			modelBuilder.indices.emplace_back(2 + offset);
 			// triangle face 2
-			vertices.emplace_back(pyramidVertexes[0]);
-			vertices.emplace_back(pyramidVertexes[2]);
-			vertices.emplace_back(pyramidVertexes[3]);
+			modelBuilder.indices.emplace_back(0 + offset);
+			modelBuilder.indices.emplace_back(2 + offset);
+			modelBuilder.indices.emplace_back(3 + offset);
 			// triangle face 3
-			vertices.emplace_back(pyramidVertexes[0]);
-			vertices.emplace_back(pyramidVertexes[3]);
-			vertices.emplace_back(pyramidVertexes[1]);
+			modelBuilder.indices.emplace_back(0 + offset);
+			modelBuilder.indices.emplace_back(3 + offset);
+			modelBuilder.indices.emplace_back(1 + offset);
 			// triangle face 4
-			vertices.emplace_back(pyramidVertexes[1]);
-			vertices.emplace_back(pyramidVertexes[2]);
-			vertices.emplace_back(pyramidVertexes[3]);
+			modelBuilder.indices.emplace_back(1 + offset);
+			modelBuilder.indices.emplace_back(2 + offset);
+			modelBuilder.indices.emplace_back(3 + offset);
+			
+			pyramidIdx++;
 		}
 
-		return std::make_unique<LveModel>(device, vertices);
+		return std::make_unique<LveModel>(device, modelBuilder);
 	}
 	void FirstApp::loadGameObjects() {
 		std::shared_ptr<LveModel> lveModel = createCubeModel(lveDevice, { .0f,.0f,.0f });
