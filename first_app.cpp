@@ -49,7 +49,8 @@ namespace lve {
 			frameTime = glm::min(frameTime, FirstApp::MAX_ALOWABLE_FRAMETIME);
 
 			cameraController.moveInPlaneXZ(lveWindow.getGLFWwindow(), frameTime, viewerObject);
-			gameObjects[0].transform.rotation.y += 1.f * frameTime;
+			gameObjects[2].transform.rotation.y += 1.f * frameTime;
+			gameObjects[2].transform.rotation.x += 1.f * frameTime;
 			camera.setViewYXZ(viewerObject.transform.translation, viewerObject.transform.rotation);
 
 			float aspect = lveRenderer.getAspectRatio();
@@ -72,6 +73,15 @@ namespace lve {
 	}
 	
 	std::unique_ptr<LveModel> createSierpPyramidModel(LveDevice& device, const std::array<LveModel::Vertex, 4>& peaks, int depth) {
+		//calculate normal for each face - clockwise
+		std::array<glm::vec3, 4> faceNormals;
+		faceNormals[0] = glm::normalize(glm::cross(peaks[1].position - peaks[0].position, peaks[2].position - peaks[0].position));
+		faceNormals[1] = glm::normalize(glm::cross(peaks[2].position - peaks[0].position, peaks[3].position - peaks[0].position));
+		faceNormals[2] = glm::normalize(glm::cross(peaks[3].position - peaks[0].position, peaks[1].position - peaks[0].position));
+		faceNormals[3] = glm::normalize(glm::cross(peaks[3].position - peaks[1].position, peaks[2].position - peaks[1].position));
+		
+		
+		
 		int nPyramids = static_cast<uint32_t>(std::pow(4, depth));
 		std::vector<std::array<LveModel::Vertex, 4>> outPyramidVector;
 		outPyramidVector.reserve(nPyramids);
@@ -86,25 +96,33 @@ namespace lve {
 			// divide each pyramid in outPyramidVector into 4 smaller
 			for (const std::array<LveModel::Vertex, 4>&pyramidVertexes : outPyramidVector) {
 				// pyramid 1
-				helpPyramidVector.push_back({pyramidVertexes[0],
-				(pyramidVertexes[0] + pyramidVertexes[1]) / 2.f,
-				(pyramidVertexes[0] + pyramidVertexes[2]) / 2.f,
-				(pyramidVertexes[0] + pyramidVertexes[3]) / 2.f });
+				helpPyramidVector.push_back({
+					pyramidVertexes[0],
+					(pyramidVertexes[0] + pyramidVertexes[1]) / 2.f,
+					(pyramidVertexes[0] + pyramidVertexes[2]) / 2.f,
+					(pyramidVertexes[0] + pyramidVertexes[3]) / 2.f 
+					});
 				// pyramid 2
-				helpPyramidVector.push_back({pyramidVertexes[1],
-				(pyramidVertexes[1] + pyramidVertexes[0]) / 2.f,
-				(pyramidVertexes[1] + pyramidVertexes[2]) / 2.f,
-				(pyramidVertexes[1] + pyramidVertexes[3]) / 2.f });
+				helpPyramidVector.push_back({
+					(pyramidVertexes[1] + pyramidVertexes[0]) / 2.f,
+					pyramidVertexes[1],
+					(pyramidVertexes[1] + pyramidVertexes[2]) / 2.f,
+					(pyramidVertexes[1] + pyramidVertexes[3]) / 2.f 
+					});
 				// pyramid 3
-				helpPyramidVector.push_back({pyramidVertexes[2],
-				(pyramidVertexes[2] + pyramidVertexes[0]) / 2.f,
-				(pyramidVertexes[2] + pyramidVertexes[1]) / 2.f,
-				(pyramidVertexes[2] + pyramidVertexes[3]) / 2.f });
+				helpPyramidVector.push_back({
+					(pyramidVertexes[2] + pyramidVertexes[0]) / 2.f,
+					(pyramidVertexes[2] + pyramidVertexes[1]) / 2.f,
+					pyramidVertexes[2],
+					(pyramidVertexes[2] + pyramidVertexes[3]) / 2.f 
+					});
 				// pyramid 4
-				helpPyramidVector.push_back({pyramidVertexes[3],
-				(pyramidVertexes[3] + pyramidVertexes[0]) / 2.f,
-				(pyramidVertexes[3] + pyramidVertexes[1]) / 2.f,
-				(pyramidVertexes[3] + pyramidVertexes[2]) / 2.f });			
+				helpPyramidVector.push_back({
+					(pyramidVertexes[3] + pyramidVertexes[0]) / 2.f,
+					(pyramidVertexes[3] + pyramidVertexes[1]) / 2.f,
+					(pyramidVertexes[3] + pyramidVertexes[2]) / 2.f, 
+					pyramidVertexes[3]
+					});			
 			}
 			outPyramidVector = helpPyramidVector;
 			helpPyramidVector.clear();
@@ -116,44 +134,57 @@ namespace lve {
 
 		int pyramidIdx = 0;
 		for (const std::array<LveModel::Vertex, 4>& pyramidVertexes : outPyramidVector) {
-			//emplace pyramid vertices67
-			modelBuilder.vertices.emplace_back(pyramidVertexes[0]);
-			modelBuilder.vertices.emplace_back(pyramidVertexes[1]);
-			modelBuilder.vertices.emplace_back(pyramidVertexes[2]);
-			modelBuilder.vertices.emplace_back(pyramidVertexes[3]);
-
+			
 			// create triangles indices
 			// triangle face 1
-			int offset = pyramidIdx * 4;
-			modelBuilder.indices.emplace_back(0 + offset);
-			modelBuilder.indices.emplace_back(1 + offset);
-			modelBuilder.indices.emplace_back(2 + offset);
-			// triangle face 2
-			modelBuilder.indices.emplace_back(0 + offset);
-			modelBuilder.indices.emplace_back(2 + offset);
-			modelBuilder.indices.emplace_back(3 + offset);
-			// triangle face 3
-			modelBuilder.indices.emplace_back(0 + offset);
-			modelBuilder.indices.emplace_back(3 + offset);
-			modelBuilder.indices.emplace_back(1 + offset);
-			// triangle face 4
-			modelBuilder.indices.emplace_back(1 + offset);
-			modelBuilder.indices.emplace_back(2 + offset);
-			modelBuilder.indices.emplace_back(3 + offset);
+			modelBuilder.vertices.emplace_back(pyramidVertexes[0]);
+			modelBuilder.vertices.back().normal = faceNormals[0];
+			modelBuilder.vertices.emplace_back(pyramidVertexes[1]);
+			modelBuilder.vertices.back().normal = faceNormals[0];
+			modelBuilder.vertices.emplace_back(pyramidVertexes[2]);
+			modelBuilder.vertices.back().normal = faceNormals[0];
 			
-			pyramidIdx++;
+			// triangle face 2
+			modelBuilder.vertices.emplace_back(pyramidVertexes[0]);
+			modelBuilder.vertices.back().normal = faceNormals[1];
+			modelBuilder.vertices.emplace_back(pyramidVertexes[2]);
+			modelBuilder.vertices.back().normal = faceNormals[1];
+			modelBuilder.vertices.emplace_back(pyramidVertexes[3]);
+			modelBuilder.vertices.back().normal = faceNormals[1];
+			
+			// triangle face 3
+			modelBuilder.vertices.emplace_back(pyramidVertexes[0]);
+			modelBuilder.vertices.back().normal = faceNormals[2];
+			modelBuilder.vertices.emplace_back(pyramidVertexes[3]);
+			modelBuilder.vertices.back().normal = faceNormals[2];
+			modelBuilder.vertices.emplace_back(pyramidVertexes[1]);
+			modelBuilder.vertices.back().normal = faceNormals[2];
+			
+			// triangle face 4
+			modelBuilder.vertices.emplace_back(pyramidVertexes[3]);
+			modelBuilder.vertices.back().normal = faceNormals[3];
+			modelBuilder.vertices.emplace_back(pyramidVertexes[2]);
+			modelBuilder.vertices.back().normal = faceNormals[3];
+			modelBuilder.vertices.emplace_back(pyramidVertexes[1]);
+			modelBuilder.vertices.back().normal = faceNormals[3];
 		}
 
 		return std::make_unique<LveModel>(device, modelBuilder);
 	}
 	void FirstApp::loadGameObjects() {
-		std::shared_ptr<LveModel> lveModel = LveModel::createModelFromFile(lveDevice, "models/rat.obj");
+		std::shared_ptr<LveModel> lveModel = LveModel::createModelFromFile(lveDevice, "models/smooth_vase.obj");
 		auto gameObject = LveGameObject::createGameObject();
 		gameObject.model = lveModel;
 		gameObject.transform.translation = { .0f,.0f,2.5f };
-		gameObject.transform.scale = { .01f,-.01f,.01f };
-		gameObject.color = { .13f,.06f,.025f };
+		gameObject.transform.scale = { 1.f,.2f,1.f };
 		gameObjects.push_back(std::move(gameObject));
+
+		std::shared_ptr<LveModel> lveModel2 = LveModel::createModelFromFile(lveDevice, "models/rat.obj");
+		auto gameObject2 = LveGameObject::createGameObject();
+		gameObject2.model = lveModel2;
+		gameObject2.transform.translation = { .0f,-2.0f,2.5f };
+		gameObject2.transform.scale = { 1.f,1.f,1.f };
+		gameObjects.push_back(std::move(gameObject2));
 
 		std::array<LveModel::Vertex, 4> pyramidVertices;
 		pyramidVertices[0] = { {.0f,-.5f,.5f},{1.f,1.f,1.f} };
@@ -163,9 +194,9 @@ namespace lve {
 		std::shared_ptr<LveModel> lvePyramidModel = createSierpPyramidModel(lveDevice, pyramidVertices, 3);
 		auto sierpPyramid = LveGameObject::createGameObject();
 		sierpPyramid.model = lvePyramidModel;
-		sierpPyramid.transform.translation = { .0f,.0f,2.5f };
+		sierpPyramid.transform.translation = { .0f,.50f,2.5f };
 		sierpPyramid.transform.scale = { .5f,.5f,.5f };
-		//gameObjects.push_back(std::move(sierpPyramid));
+		gameObjects.push_back(std::move(sierpPyramid));
 	}
 
 }
