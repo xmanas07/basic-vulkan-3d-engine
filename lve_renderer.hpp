@@ -33,7 +33,6 @@ namespace lve {
 			return currentFrameIndex;
 		}
 
-
 		VkCommandBuffer beginFrame();
 		void endFrame();
 		void beginSwapChainRenderPass(VkCommandBuffer commandBuffer);
