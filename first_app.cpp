@@ -3,6 +3,7 @@
 #include "keyboard_movement_controller.hpp"
 #include "lve_camera.hpp"
 #include "simple_render_system.hpp"
+#include "lve_buffer.hpp"
 
 // libs
 #define GLM_FORCE_RADIANS
@@ -17,9 +18,12 @@
 #include <stdexcept>
 #include <cmath>
 
-
-
 namespace lve {
+
+	struct GlobalUbo {
+		glm::mat4 projectionView{ 1.f };
+		glm::vec3 lightDirection = glm::normalize(glm::vec3{ 1.f,-3.f,-1.f });
+	};
 
 	FirstApp::FirstApp()
 	{
@@ -30,6 +34,19 @@ namespace lve {
 	}
 
 	void FirstApp::run() {
+
+		std::vector<std::unique_ptr<LveBuffer>> uboBuffers(LveSwapChain::MAX_FRAMES_IN_FLIGHT);
+		for (int i = 0; i < uboBuffers.size(); i++) {
+			uboBuffers[i] = std::make_unique<LveBuffer>(
+				lveDevice,
+				sizeof(GlobalUbo),
+				1,
+				VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
+			uboBuffers[i]->map();
+		}
+		
+
 		SimpleRenderSystem simpleRenderSystem{ lveDevice, lveRenderer.getSwapchainRenderPass() };
 		LveCamera camera{};
 		camera.setViewTarget(glm::vec3(-1.f, -2.f, 2.f), glm::vec3(0.f, 0.f, 2.5f));
@@ -57,13 +74,23 @@ namespace lve {
 			camera.setPerspectiveProjection(glm::radians(50.f), aspect, .1f, 10.f);
 
 			if (auto commandBuffer = lveRenderer.beginFrame()) {
-				
-				// begin offscreen shadow pass
-				// render shadow casting objects
-				// end offscreen shadow pass
+				int frameIndex = lveRenderer.getCurrentFrameIndex();
+				FrameInfo frameInfo{
+					frameIndex,
+					frameTime,
+					commandBuffer,
+					camera,
+				};
 
+				// update
+				GlobalUbo ubo{};
+				ubo.projectionView = camera.getProjection() * camera.getView();
+				uboBuffers[frameIndex]->writeToBuffer(&ubo);
+				uboBuffers[frameIndex]->flush();
+				
+				// renderer
 				lveRenderer.beginSwapChainRenderPass(commandBuffer);
-				simpleRenderSystem.renderGameObjects(commandBuffer, gameObjects, camera);
+				simpleRenderSystem.renderGameObjects(frameInfo, gameObjects);
 				lveRenderer.endSwapChainRenderPass(commandBuffer);
 				lveRenderer.endFrame();
 			}
