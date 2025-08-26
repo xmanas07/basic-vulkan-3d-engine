@@ -19,7 +19,6 @@
 #include <cmath>
 
 namespace lve {
-
 	struct GlobalUbo {
 		glm::mat4 projectionView{ 1.f };
 		glm::vec3 lightDirection = glm::normalize(glm::vec3{ 1.f,-3.f,-1.f });
@@ -27,6 +26,10 @@ namespace lve {
 
 	FirstApp::FirstApp()
 	{
+		globalPool = LveDescriptorPool::Builder(lveDevice)
+			.setMaxSets(LveSwapChain::MAX_FRAMES_IN_FLIGHT)
+			.addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, LveSwapChain::MAX_FRAMES_IN_FLIGHT)
+			.build();
 		loadGameObjects();
 	}
 	FirstApp::~FirstApp()
@@ -45,9 +48,22 @@ namespace lve {
 				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
 			uboBuffers[i]->map();
 		}
+
+		auto globalSetLayout = LveDescriptorSetLayout::Builder(lveDevice)
+			.addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT)
+			.build();
+
+		std::vector<VkDescriptorSet> globalDescriptorSets(LveSwapChain::MAX_FRAMES_IN_FLIGHT);
+		for (int i = 0; i < globalDescriptorSets.size(); i++) {
+			auto bufferInfo = uboBuffers[i]->descriptorInfo();
+			LveDescriptorWriter(*globalSetLayout, *globalPool)
+				.writeBuffer(0, &bufferInfo)
+				.build(globalDescriptorSets[i]);
+		}
+
 		
 
-		SimpleRenderSystem simpleRenderSystem{ lveDevice, lveRenderer.getSwapchainRenderPass() };
+		SimpleRenderSystem simpleRenderSystem{ lveDevice, lveRenderer.getSwapchainRenderPass(), globalSetLayout->getDescriptorSetLayout()};
 		LveCamera camera{};
 		camera.setViewTarget(glm::vec3(-1.f, -2.f, 2.f), glm::vec3(0.f, 0.f, 2.5f));
 
@@ -66,6 +82,7 @@ namespace lve {
 			frameTime = glm::min(frameTime, FirstApp::MAX_ALOWABLE_FRAMETIME);
 
 			cameraController.moveInPlaneXZ(lveWindow.getGLFWwindow(), frameTime, viewerObject);
+			gameObjects[1].transform.rotation.y += 1.f * frameTime;
 			gameObjects[2].transform.rotation.y += 1.f * frameTime;
 			gameObjects[2].transform.rotation.x += 1.f * frameTime;
 			camera.setViewYXZ(viewerObject.transform.translation, viewerObject.transform.rotation);
@@ -80,6 +97,7 @@ namespace lve {
 					frameTime,
 					commandBuffer,
 					camera,
+					globalDescriptorSets[frameIndex]
 				};
 
 				// update
@@ -202,14 +220,14 @@ namespace lve {
 		std::shared_ptr<LveModel> lveModel = LveModel::createModelFromFile(lveDevice, "models/smooth_vase.obj");
 		auto gameObject = LveGameObject::createGameObject();
 		gameObject.model = lveModel;
-		gameObject.transform.translation = { .0f,.0f,2.5f };
+		gameObject.transform.translation = { .0f,1.0f,2.5f };
 		gameObject.transform.scale = { 1.f,.2f,1.f };
 		gameObjects.push_back(std::move(gameObject));
 
-		std::shared_ptr<LveModel> lveModel2 = LveModel::createModelFromFile(lveDevice, "models/rat.obj");
+		std::shared_ptr<LveModel> lveModel2 = LveModel::createModelFromFile(lveDevice, "models/brown_rat.obj");
 		auto gameObject2 = LveGameObject::createGameObject();
 		gameObject2.model = lveModel2;
-		gameObject2.transform.translation = { .0f,-2.0f,2.5f };
+		gameObject2.transform.translation = { .0f,-0.0f,2.5f };
 		gameObject2.transform.scale = { 1.f,1.f,1.f };
 		gameObjects.push_back(std::move(gameObject2));
 
@@ -221,7 +239,7 @@ namespace lve {
 		std::shared_ptr<LveModel> lvePyramidModel = createSierpPyramidModel(lveDevice, pyramidVertices, 3);
 		auto sierpPyramid = LveGameObject::createGameObject();
 		sierpPyramid.model = lvePyramidModel;
-		sierpPyramid.transform.translation = { .0f,.50f,2.5f };
+		sierpPyramid.transform.translation = { .0f,2.0f,2.5f };
 		sierpPyramid.transform.scale = { .5f,.5f,.5f };
 		gameObjects.push_back(std::move(sierpPyramid));
 	}
