@@ -21,7 +21,9 @@
 namespace lve {
 	struct GlobalUbo {
 		glm::mat4 projectionView{ 1.f };
-		glm::vec3 lightDirection = glm::normalize(glm::vec3{ 1.f,-3.f,-1.f });
+		glm::vec4 ambientLightColor{1.f, 1.f, 1.f, .02f};
+		glm::vec3 lightPosition{ -1.f };
+		alignas(16) glm::vec4 lightColor{ 1.f };
 	};
 
 	FirstApp::FirstApp()
@@ -50,7 +52,7 @@ namespace lve {
 		}
 
 		auto globalSetLayout = LveDescriptorSetLayout::Builder(lveDevice)
-			.addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT)
+			.addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL_GRAPHICS)
 			.build();
 
 		std::vector<VkDescriptorSet> globalDescriptorSets(LveSwapChain::MAX_FRAMES_IN_FLIGHT);
@@ -82,9 +84,6 @@ namespace lve {
 			frameTime = glm::min(frameTime, FirstApp::MAX_ALOWABLE_FRAMETIME);
 
 			cameraController.moveInPlaneXZ(lveWindow.getGLFWwindow(), frameTime, viewerObject);
-			gameObjects[1].transform.rotation.y += 1.f * frameTime;
-			gameObjects[2].transform.rotation.y += 1.f * frameTime;
-			gameObjects[2].transform.rotation.x += 1.f * frameTime;
 			camera.setViewYXZ(viewerObject.transform.translation, viewerObject.transform.rotation);
 
 			float aspect = lveRenderer.getAspectRatio();
@@ -97,7 +96,8 @@ namespace lve {
 					frameTime,
 					commandBuffer,
 					camera,
-					globalDescriptorSets[frameIndex]
+					globalDescriptorSets[frameIndex],
+					gameObjects
 				};
 
 				// update
@@ -108,7 +108,7 @@ namespace lve {
 				
 				// renderer
 				lveRenderer.beginSwapChainRenderPass(commandBuffer);
-				simpleRenderSystem.renderGameObjects(frameInfo, gameObjects);
+				simpleRenderSystem.renderGameObjects(frameInfo);
 				lveRenderer.endSwapChainRenderPass(commandBuffer);
 				lveRenderer.endFrame();
 			}
@@ -220,28 +220,36 @@ namespace lve {
 		std::shared_ptr<LveModel> lveModel = LveModel::createModelFromFile(lveDevice, "models/smooth_vase.obj");
 		auto gameObject = LveGameObject::createGameObject();
 		gameObject.model = lveModel;
-		gameObject.transform.translation = { .0f,1.0f,2.5f };
+		gameObject.transform.translation = { .0f,0.5f,2.5f };
 		gameObject.transform.scale = { 1.f,.2f,1.f };
-		gameObjects.push_back(std::move(gameObject));
+		gameObjects.emplace(gameObject.getId(), std::move(gameObject));
 
-		std::shared_ptr<LveModel> lveModel2 = LveModel::createModelFromFile(lveDevice, "models/brown_rat.obj");
-		auto gameObject2 = LveGameObject::createGameObject();
-		gameObject2.model = lveModel2;
-		gameObject2.transform.translation = { .0f,-0.0f,2.5f };
-		gameObject2.transform.scale = { 1.f,1.f,1.f };
-		gameObjects.push_back(std::move(gameObject2));
+		lveModel = LveModel::createModelFromFile(lveDevice, "models/brown_rat.obj");
+		auto rat = LveGameObject::createGameObject();
+		rat.model = lveModel;
+		rat.transform.translation = { .0f,-0.0f,2.5f };
+		rat.transform.scale = { .5f,.5f,.5f };
+		rat.transform.rotation = {0.f, 0.f, -glm::half_pi<float>()};
+		gameObjects.emplace(rat.getId(), std::move(rat));
 
 		std::array<LveModel::Vertex, 4> pyramidVertices;
 		pyramidVertices[0] = { {.0f,-.5f,.5f},{1.f,1.f,1.f} };
 		pyramidVertices[1] = { {.0f,.5f,-.5f},{1.f,0.f,0.f} };
 		pyramidVertices[2] = { {.5f,.5f,.5f},{0.f,1.f,0.f} };
 		pyramidVertices[3] = { {-.5f,.5f,.5f},{0.f,0.f,1.f} };
-		std::shared_ptr<LveModel> lvePyramidModel = createSierpPyramidModel(lveDevice, pyramidVertices, 3);
+		lveModel = createSierpPyramidModel(lveDevice, pyramidVertices, 3);
 		auto sierpPyramid = LveGameObject::createGameObject();
-		sierpPyramid.model = lvePyramidModel;
-		sierpPyramid.transform.translation = { .0f,2.0f,2.5f };
+		sierpPyramid.model = lveModel;
+		sierpPyramid.transform.translation = { 1.5f,-.5f,2.5f };
 		sierpPyramid.transform.scale = { .5f,.5f,.5f };
-		gameObjects.push_back(std::move(sierpPyramid));
+		gameObjects.emplace(sierpPyramid.getId(), std::move(sierpPyramid));
+		
+		lveModel = LveModel::createModelFromFile(lveDevice, "models/quad.obj");
+		auto floor = LveGameObject::createGameObject();
+		floor.model = lveModel;
+		floor.transform.translation = { .0f,.5f,2.5f };
+		floor.transform.scale = { 3.f,1.f,3.f };
+		gameObjects.emplace(floor.getId(), std::move(floor));
 	}
 
 }
