@@ -58,9 +58,12 @@ namespace lve {
 
         // cleanup synchronization objects
         for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
-            vkDestroySemaphore(device.device(), renderFinishedSemaphores[i], nullptr);
             vkDestroySemaphore(device.device(), imageAvailableSemaphores[i], nullptr);
             vkDestroyFence(device.device(), inFlightFences[i], nullptr);
+        }
+        // cleanup render finished semaphores
+        for (size_t i = 0; i < imageCount(); i++) {
+            vkDestroySemaphore(device.device(), renderFinishedSemaphores[i], nullptr);
         }
     }
 
