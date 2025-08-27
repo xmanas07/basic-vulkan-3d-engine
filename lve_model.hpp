@@ -56,6 +56,8 @@ namespace lve {
             bool operator==(const Vertex& other) const {
                 return position == other.position && color == other.color && normal == other.normal && uv == other.uv;
             }
+		    static std::vector<VkVertexInputBindingDescription> getBindingDescriptions();
+		    static std::vector<VkVertexInputAttributeDescription> getAttributeDescriptions();
 
 		};
         struct Builder {
@@ -65,8 +67,6 @@ namespace lve {
             void loadModel(const std::string& filepath);
         };
 
-		static std::vector<VkVertexInputBindingDescription> getBindingDescriptions();
-		static std::vector<VkVertexInputAttributeDescription> getAttributeDescriptions();
 		LveModel(LveDevice& device, const LveModel::Builder& builder);
 		~LveModel();
 		
