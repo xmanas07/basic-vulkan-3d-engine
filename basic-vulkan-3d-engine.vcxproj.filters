@@ -150,4 +150,7 @@
       <Filter>systems\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Object Include="models\smooth_vase.obj" />
+  </ItemGroup>
 </Project>

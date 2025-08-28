@@ -198,6 +198,9 @@
     <ClInclude Include="point_light_system.hpp" />
     <ClInclude Include="simple_render_system.hpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Object Include="models\smooth_vase.obj" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
