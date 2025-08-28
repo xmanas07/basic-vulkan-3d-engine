@@ -224,7 +224,7 @@ namespace lve {
 		gameObject.transform.scale = { 1.f,.2f,1.f };
 		gameObjects.emplace(gameObject.getId(), std::move(gameObject));
 
-		lveModel = LveModel::createModelFromFile(lveDevice, "models/brown_rat.obj");
+		lveModel = LveModel::createModelFromFile(lveDevice, "models/smooth_brown_rat.obj");
 		auto rat = LveGameObject::createGameObject();
 		rat.model = lveModel;
 		rat.transform.translation = { .0f,-0.0f,2.5f };
