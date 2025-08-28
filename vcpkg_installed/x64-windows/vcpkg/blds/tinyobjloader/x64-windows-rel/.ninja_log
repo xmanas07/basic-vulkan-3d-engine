@@ -1,0 +1,4 @@
+# ninja log v6
+15	2607	7781088043261558	CMakeFiles/tinyobjloader.dir/tiny_obj_loader.cc.obj	8fdb6532fccea295
+2609	2663	7781088069202630	tinyobjloader.lib	74450e81d69c1ffa
+2663	2756	7781088069742456	CMakeFiles/install.util	32bf79202969ed9a

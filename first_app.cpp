@@ -217,14 +217,14 @@ namespace lve {
 		return std::make_unique<LveModel>(device, modelBuilder);
 	}
 	void FirstApp::loadGameObjects() {
-		std::shared_ptr<LveModel> lveModel = LveModel::createModelFromFile(lveDevice, "models/smooth_vase.obj");
+		std::shared_ptr<LveModel> lveModel = LveModel::createModelFromFile(lveDevice, "C:/Users/pivop/source/repos/xmanas07/basic-vulkan-3d-engine/models/smooth_brown_rat.mtl");
 		auto gameObject = LveGameObject::createGameObject();
 		gameObject.model = lveModel;
 		gameObject.transform.translation = { .0f,0.5f,2.5f };
 		gameObject.transform.scale = { 1.f,.2f,1.f };
 		gameObjects.emplace(gameObject.getId(), std::move(gameObject));
 
-		lveModel = LveModel::createModelFromFile(lveDevice, "models/brown_rat.obj");
+		lveModel = LveModel::createModelFromFile(lveDevice, "C:/Users/pivop/source/repos/xmanas07/basic-vulkan-3d-engine/models/brown_rat.obj");
 		auto rat = LveGameObject::createGameObject();
 		rat.model = lveModel;
 		rat.transform.translation = { .0f,-0.0f,2.5f };
