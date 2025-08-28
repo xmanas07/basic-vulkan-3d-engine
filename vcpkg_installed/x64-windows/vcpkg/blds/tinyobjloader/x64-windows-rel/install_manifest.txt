@@ -1,8 +1,0 @@
-C:/Users/pivop/source/repos/xmanas07/basic-vulkan-3d-engine/vcpkg_installed/x64-windows/vcpkg/pkgs/tinyobjloader_x64-windows/lib/tinyobjloader.lib
-C:/Users/pivop/source/repos/xmanas07/basic-vulkan-3d-engine/vcpkg_installed/x64-windows/vcpkg/pkgs/tinyobjloader_x64-windows/lib/tinyobjloader/cmake/tinyobjloader-targets.cmake
-C:/Users/pivop/source/repos/xmanas07/basic-vulkan-3d-engine/vcpkg_installed/x64-windows/vcpkg/pkgs/tinyobjloader_x64-windows/lib/tinyobjloader/cmake/tinyobjloader-targets-release.cmake
-C:/Users/pivop/source/repos/xmanas07/basic-vulkan-3d-engine/vcpkg_installed/x64-windows/vcpkg/pkgs/tinyobjloader_x64-windows/include/tiny_obj_loader.h
-C:/Users/pivop/source/repos/xmanas07/basic-vulkan-3d-engine/vcpkg_installed/x64-windows/vcpkg/pkgs/tinyobjloader_x64-windows/share/tinyobjloader/LICENSE
-C:/Users/pivop/source/repos/xmanas07/basic-vulkan-3d-engine/vcpkg_installed/x64-windows/vcpkg/pkgs/tinyobjloader_x64-windows/lib/tinyobjloader/cmake/tinyobjloader-config.cmake
-C:/Users/pivop/source/repos/xmanas07/basic-vulkan-3d-engine/vcpkg_installed/x64-windows/vcpkg/pkgs/tinyobjloader_x64-windows/lib/tinyobjloader/cmake/tinyobjloader-config-version.cmake
-C:/Users/pivop/source/repos/xmanas07/basic-vulkan-3d-engine/vcpkg_installed/x64-windows/vcpkg/pkgs/tinyobjloader_x64-windows/lib/pkgconfig/tinyobjloader.pc
