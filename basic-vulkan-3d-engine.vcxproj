@@ -182,6 +182,7 @@
     <ClCompile Include="lve_window.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="lve_swap_chain.cpp" />
+    <ClCompile Include="model_shapes.cpp" />
     <ClCompile Include="point_light_system.cpp" />
     <ClCompile Include="simple_render_system.cpp" />
   </ItemGroup>
@@ -200,6 +201,7 @@
     <ClInclude Include="lve_utils.hpp" />
     <ClInclude Include="lve_window.hpp" />
     <ClInclude Include="lve_swap_chain.hpp" />
+    <ClInclude Include="model_shapes.hpp" />
     <ClInclude Include="point_light_system.hpp" />
     <ClInclude Include="simple_render_system.hpp" />
   </ItemGroup>
