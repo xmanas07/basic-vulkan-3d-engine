@@ -108,8 +108,11 @@ namespace lve {
 				
 				// renderer
 				lveRenderer.beginSwapChainRenderPass(commandBuffer);
+
+				// make sure to render solid objects before transparent objects
 				simpleRenderSystem.renderGameObjects(frameInfo);
 				pointLightSystem.render(frameInfo);
+
 				lveRenderer.endSwapChainRenderPass(commandBuffer);
 				lveRenderer.endFrame();
 			}

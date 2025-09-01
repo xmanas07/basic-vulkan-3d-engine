@@ -47,7 +47,7 @@ void main() {
 		vec3 halfAngle = normalize(directionToLight + viewDirection);
 		float blinnTerm = dot(surfaceNormal, halfAngle);
 		blinnTerm = clamp(blinnTerm, 0, 1);
-		blinnTerm = pow(blinnTerm, 512.0); // higher values -> sharper highlight
+		blinnTerm = pow(blinnTerm, 1024.0); // higher values -> sharper highlight
 		specularLight += intensity * blinnTerm;
 	}
 	outColor = vec4(diffuseLight * fragColor + specularLight * fragColor, 1.0);
