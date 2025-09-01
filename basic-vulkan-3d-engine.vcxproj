@@ -201,6 +201,24 @@
     <ClInclude Include="point_light_system.hpp" />
     <ClInclude Include="simple_render_system.hpp" />
   </ItemGroup>
+<ItemGroup>
+	<ShaderFiles Include="Shaders\**\*.vert">
+		<CustomBuildTool>
+			<Command>C:\VulkanSDK\1.4.321.1\Bin\glslc.exe &quot;%(FullPath)&quot; -o &quot;$(IntDir)%(RelativeDir)%(Filename).spv&quot;</Command>
+			<Outputs>$(IntDir)%(RelativeDir)%(Filename).spv</Outputs>
+			<AdditionalInputs>%(FullPath)</AdditionalInputs>
+		</CustomBuildTool>
+	</ShaderFiles>
+
+	<ShaderFiles Include="Shaders\**\*.frag">
+		<CustomBuildTool>
+			<Command>C:\VulkanSDK\1.4.321.1\Bin\glslc.exe &quot;%(FullPath)&quot; -o &quot;$(IntDir)%(RelativeDir)%(Filename).spv&quot;</Command>
+			<Outputs>$(IntDir)%(RelativeDir)%(Filename).spv</Outputs>
+			<AdditionalInputs>%(FullPath)</AdditionalInputs>
+		</CustomBuildTool>
+	</ShaderFiles>
+</ItemGroup>	
+
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
