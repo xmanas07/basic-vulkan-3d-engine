@@ -71,8 +71,40 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)\bin\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)\bin\intermediates\$(Platform)\$(Configuration)\</IntDir>
+    <PreBuildEventUseInBuild>true</PreBuildEventUseInBuild>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)\bin\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)\bin\intermediates\$(Platform)\$(Configuration)\</IntDir>
+    <PreBuildEventUseInBuild>true</PreBuildEventUseInBuild>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(SolutionDir)\bin\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)\bin\intermediates\$(Platform)\$(Configuration)\</IntDir>
+    <PreBuildEventUseInBuild>true</PreBuildEventUseInBuild>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)\bin\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)\bin\intermediates\$(Platform)\$(Configuration)\</IntDir>
+    <PreBuildEventUseInBuild>true</PreBuildEventUseInBuild>
+  </PropertyGroup>
   <PropertyGroup Label="Vcpkg">
     <VcpkgEnableManifest>true</VcpkgEnableManifest>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <VcpkgInstalledDir>$(SolutionDir)</VcpkgInstalledDir>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <VcpkgInstalledDir>$(SolutionDir)</VcpkgInstalledDir>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <VcpkgInstalledDir>$(SolutionDir)</VcpkgInstalledDir>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <VcpkgInstalledDir>$(SolutionDir)</VcpkgInstalledDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -89,6 +121,9 @@
       <AdditionalLibraryDirectories>C:\VulkanSDK\1.4.321.1\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>call "$(ProjectDir)src\shaders\compile.bat"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -107,6 +142,9 @@
       <AdditionalLibraryDirectories>C:\VulkanSDK\1.4.321.1\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>call "$(ProjectDir)src\shaders\compile.bat"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -124,7 +162,7 @@
       <AdditionalDependencies>vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>call "$(ProjectDir)shaders\compile.bat</Command>
+      <Command>call "$(ProjectDir)src\shaders\compile.bat"</Command>
     </PreBuildEvent>
     <PreBuildEvent>
       <Message>
@@ -149,7 +187,7 @@
       <AdditionalDependencies>vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>call "$(ProjectDir)shaders\compile.bat</Command>
+      <Command>call "$(ProjectDir)src\shaders\compile.bat"</Command>
     </PreBuildEvent>
     <PreBuildEvent>
       <Message>
@@ -157,69 +195,47 @@
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="Makefile" />
-    <None Include="shaders\compile.bat" />
-    <None Include="shaders\point_light.frag" />
-    <None Include="shaders\point_light.frag.spv" />
-    <None Include="shaders\point_light.vert" />
-    <None Include="shaders\point_light.vert.spv" />
-    <None Include="shaders\simple_shader.frag" />
-    <None Include="shaders\simple_shader.frag.spv" />
-    <None Include="shaders\simple_shader.vert" />
-    <None Include="shaders\simple_shader.vert.spv" />
+    <ClCompile Include="src\first_app.cpp" />
+    <ClCompile Include="src\keyboard_movement_controller.cpp" />
+    <ClCompile Include="src\lve_buffer.cpp" />
+    <ClCompile Include="src\lve_camera.cpp" />
+    <ClCompile Include="src\lve_descriptors.cpp" />
+    <ClCompile Include="src\lve_device.cpp" />
+    <ClCompile Include="src\lve_game_object.cpp" />
+    <ClCompile Include="src\lve_model.cpp" />
+    <ClCompile Include="src\lve_pipeline.cpp" />
+    <ClCompile Include="src\lve_renderer.cpp" />
+    <ClCompile Include="src\lve_window.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\lve_swap_chain.cpp" />
+    <ClCompile Include="src\model_shapes.cpp" />
+    <ClCompile Include="src\point_light_system.cpp" />
+    <ClCompile Include="src\simple_render_system.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="first_app.cpp" />
-    <ClCompile Include="keyboard_movement_controller.cpp" />
-    <ClCompile Include="lve_buffer.cpp" />
-    <ClCompile Include="lve_camera.cpp" />
-    <ClCompile Include="lve_descriptors.cpp" />
-    <ClCompile Include="lve_device.cpp" />
-    <ClCompile Include="lve_game_object.cpp" />
-    <ClCompile Include="lve_model.cpp" />
-    <ClCompile Include="lve_pipeline.cpp" />
-    <ClCompile Include="lve_renderer.cpp" />
-    <ClCompile Include="lve_window.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="lve_swap_chain.cpp" />
-    <ClCompile Include="model_shapes.cpp" />
-    <ClCompile Include="point_light_system.cpp" />
-    <ClCompile Include="simple_render_system.cpp" />
+    <ClInclude Include="src\first_app.hpp" />
+    <ClInclude Include="src\keyboard_movement_controller.hpp" />
+    <ClInclude Include="src\lve_buffer.hpp" />
+    <ClInclude Include="src\lve_camera.hpp" />
+    <ClInclude Include="src\lve_descriptors.hpp" />
+    <ClInclude Include="src\lve_device.hpp" />
+    <ClInclude Include="src\lve_frame_info.hpp" />
+    <ClInclude Include="src\lve_game_object.hpp" />
+    <ClInclude Include="src\lve_model.hpp" />
+    <ClInclude Include="src\lve_pipeline.hpp" />
+    <ClInclude Include="src\lve_renderer.hpp" />
+    <ClInclude Include="src\lve_utils.hpp" />
+    <ClInclude Include="src\lve_window.hpp" />
+    <ClInclude Include="src\lve_swap_chain.hpp" />
+    <ClInclude Include="src\model_shapes.hpp" />
+    <ClInclude Include="src\point_light_system.hpp" />
+    <ClInclude Include="src\simple_render_system.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="first_app.hpp" />
-    <ClInclude Include="keyboard_movement_controller.hpp" />
-    <ClInclude Include="lve_buffer.hpp" />
-    <ClInclude Include="lve_camera.hpp" />
-    <ClInclude Include="lve_descriptors.hpp" />
-    <ClInclude Include="lve_device.hpp" />
-    <ClInclude Include="lve_frame_info.hpp" />
-    <ClInclude Include="lve_game_object.hpp" />
-    <ClInclude Include="lve_model.hpp" />
-    <ClInclude Include="lve_pipeline.hpp" />
-    <ClInclude Include="lve_renderer.hpp" />
-    <ClInclude Include="lve_utils.hpp" />
-    <ClInclude Include="lve_window.hpp" />
-    <ClInclude Include="lve_swap_chain.hpp" />
-    <ClInclude Include="model_shapes.hpp" />
-    <ClInclude Include="point_light_system.hpp" />
-    <ClInclude Include="simple_render_system.hpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ShaderFiles Include="Shaders\**\*.vert">
-      <CustomBuildTool>
-        <Command>C:\VulkanSDK\1.4.321.1\Bin\glslc.exe "%(FullPath)" -o "$(IntDir)%(RelativeDir)%(Filename).spv"</Command>
-        <Outputs>$(IntDir)%(RelativeDir)%(Filename).spv</Outputs>
-        <AdditionalInputs>%(FullPath)</AdditionalInputs>
-      </CustomBuildTool>
-    </ShaderFiles>
-    <ShaderFiles Include="Shaders\**\*.frag">
-      <CustomBuildTool>
-        <Command>C:\VulkanSDK\1.4.321.1\Bin\glslc.exe "%(FullPath)" -o "$(IntDir)%(RelativeDir)%(Filename).spv"</Command>
-        <Outputs>$(IntDir)%(RelativeDir)%(Filename).spv</Outputs>
-        <AdditionalInputs>%(FullPath)</AdditionalInputs>
-      </CustomBuildTool>
-    </ShaderFiles>
+    <None Include="src\shaders\point_light.frag" />
+    <None Include="src\shaders\point_light.vert" />
+    <None Include="src\shaders\simple_shader.frag" />
+    <None Include="src\shaders\simple_shader.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

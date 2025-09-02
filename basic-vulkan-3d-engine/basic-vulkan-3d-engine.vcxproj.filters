@@ -30,127 +30,119 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\simple_shader.vert.spv">
-      <Filter>shaders</Filter>
+    <None Include="src\shaders\compile.bat">
+      <Filter>Main Files\Source Files</Filter>
     </None>
-    <None Include="shaders\compile.bat">
-      <Filter>shaders</Filter>
-    </None>
-    <None Include="shaders\simple_shader.frag">
-      <Filter>shaders</Filter>
-    </None>
-    <None Include="shaders\simple_shader.frag.spv">
-      <Filter>shaders</Filter>
-    </None>
-    <None Include="shaders\simple_shader.vert">
-      <Filter>shaders</Filter>
-    </None>
-    <None Include="Makefile" />
-    <None Include="shaders\point_light.vert">
-      <Filter>shaders</Filter>
-    </None>
-    <None Include="shaders\point_light.frag">
-      <Filter>shaders</Filter>
-    </None>
+    <None Include="src\shaders\point_light.frag" />
+    <None Include="src\shaders\point_light.frag.spv" />
+    <None Include="src\shaders\point_light.vert" />
+    <None Include="src\shaders\point_light.vert.spv" />
+    <None Include="src\shaders\simple_shader.frag" />
+    <None Include="src\shaders\simple_shader.frag.spv" />
+    <None Include="src\shaders\simple_shader.vert" />
+    <None Include="src\shaders\simple_shader.vert.spv" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="first_app.cpp">
+    <ClCompile Include="src\first_app.cpp">
       <Filter>Main Files\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="lve_device.cpp">
+    <ClCompile Include="src\keyboard_movement_controller.cpp">
       <Filter>Main Files\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="lve_pipeline.cpp">
+    <ClCompile Include="src\lve_buffer.cpp">
       <Filter>Main Files\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="lve_window.cpp">
+    <ClCompile Include="src\lve_camera.cpp">
       <Filter>Main Files\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="src\lve_descriptors.cpp">
       <Filter>Main Files\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="lve_swap_chain.cpp">
+    <ClCompile Include="src\lve_device.cpp">
       <Filter>Main Files\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="lve_model.cpp">
+    <ClCompile Include="src\lve_game_object.cpp">
       <Filter>Main Files\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="lve_game_object.cpp">
+    <ClCompile Include="src\lve_model.cpp">
       <Filter>Main Files\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="lve_renderer.cpp">
+    <ClCompile Include="src\lve_pipeline.cpp">
       <Filter>Main Files\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="lve_camera.cpp">
+    <ClCompile Include="src\lve_renderer.cpp">
       <Filter>Main Files\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="keyboard_movement_controller.cpp">
+    <ClCompile Include="src\lve_window.cpp">
       <Filter>Main Files\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="lve_buffer.cpp">
+    <ClCompile Include="src\main.cpp">
       <Filter>Main Files\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="lve_descriptors.cpp">
+    <ClCompile Include="src\lve_swap_chain.cpp">
       <Filter>Main Files\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="simple_render_system.cpp">
-      <Filter>systems\Source Files</Filter>
+    <ClCompile Include="src\model_shapes.cpp">
+      <Filter>Main Files\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="point_light_system.cpp">
-      <Filter>systems\Source Files</Filter>
+    <ClCompile Include="src\point_light_system.cpp">
+      <Filter>Main Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\simple_render_system.cpp">
+      <Filter>Main Files\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="first_app.hpp">
+    <ClInclude Include="src\first_app.hpp">
       <Filter>Main Files\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lve_device.hpp">
+    <ClInclude Include="src\keyboard_movement_controller.hpp">
       <Filter>Main Files\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lve_pipeline.hpp">
+    <ClInclude Include="src\lve_buffer.hpp">
       <Filter>Main Files\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lve_window.hpp">
+    <ClInclude Include="src\lve_camera.hpp">
       <Filter>Main Files\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lve_swap_chain.hpp">
+    <ClInclude Include="src\lve_descriptors.hpp">
       <Filter>Main Files\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lve_model.hpp">
+    <ClInclude Include="src\lve_device.hpp">
       <Filter>Main Files\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lve_game_object.hpp">
+    <ClInclude Include="src\lve_frame_info.hpp">
       <Filter>Main Files\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lve_renderer.hpp">
+    <ClInclude Include="src\lve_game_object.hpp">
       <Filter>Main Files\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lve_camera.hpp">
+    <ClInclude Include="src\lve_model.hpp">
       <Filter>Main Files\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="keyboard_movement_controller.hpp">
+    <ClInclude Include="src\lve_pipeline.hpp">
       <Filter>Main Files\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lve_utils.hpp">
+    <ClInclude Include="src\lve_renderer.hpp">
       <Filter>Main Files\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lve_buffer.hpp">
+    <ClInclude Include="src\lve_utils.hpp">
       <Filter>Main Files\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lve_frame_info.hpp">
+    <ClInclude Include="src\lve_window.hpp">
       <Filter>Main Files\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lve_descriptors.hpp">
+    <ClInclude Include="src\lve_swap_chain.hpp">
       <Filter>Main Files\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="simple_render_system.hpp">
-      <Filter>systems\Header Files</Filter>
+    <ClInclude Include="src\model_shapes.hpp">
+      <Filter>Main Files\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="point_light_system.hpp">
-      <Filter>systems\Header Files</Filter>
+    <ClInclude Include="src\point_light_system.hpp">
+      <Filter>Main Files\Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Object Include="models\smooth_vase.obj" />
+    <ClInclude Include="src\simple_render_system.hpp">
+      <Filter>Main Files\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -124,14 +124,14 @@ namespace lve {
 	
 	
 	void FirstApp::loadGameObjects() {
-		std::shared_ptr<LveModel> lveModel = LveModel::createModelFromFile(lveDevice, "models/smooth_vase.obj");
+		std::shared_ptr<LveModel> lveModel = LveModel::createModelFromFile(lveDevice, "src/models/smooth_vase.obj");
 		auto gameObject = LveGameObject::createGameObject();
 		gameObject.model = lveModel;
 		gameObject.transform.translation = { .0f,0.5f,2.5f };
 		gameObject.transform.scale = { 1.f,.2f,1.f };
 		gameObjects.emplace(gameObject.getId(), std::move(gameObject));
 
-		lveModel = LveModel::createModelFromFile(lveDevice, "models/smooth_brown_rat.obj");
+		lveModel = LveModel::createModelFromFile(lveDevice, "src/models/smooth_brown_rat.obj");
 		auto rat = LveGameObject::createGameObject();
 		rat.model = lveModel;
 		rat.transform.translation = { .0f,-0.0f,2.5f };
@@ -152,7 +152,7 @@ namespace lve {
 		sierpPyramid.transform.scale = { 1.f,1.f,1.f };
 		gameObjects.emplace(sierpPyramid.getId(), std::move(sierpPyramid));
 		
-		lveModel = LveModel::createModelFromFile(lveDevice, "models/quad.obj");
+		lveModel = LveModel::createModelFromFile(lveDevice, "src/models/quad.obj");
 		auto floor = LveGameObject::createGameObject();
 		floor.model = lveModel;
 		floor.transform.translation = { .0f,.5f,2.5f };

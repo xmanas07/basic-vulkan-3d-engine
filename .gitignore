@@ -35,6 +35,7 @@ bld/
 
 # vcpkg directories
 vcpkg_installed/
+x64-windows/
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/

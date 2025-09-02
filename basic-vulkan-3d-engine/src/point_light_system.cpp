@@ -63,7 +63,7 @@ namespace lve {
 		pipelineConfig.bindingDescriptions.clear();
 		pipelineConfig.renderPass = renderPass;
 		pipelineConfig.pipelineLayout = pipelineLayout;
-		lvePipeline = std::make_unique<LvePipeline>(lveDevice, "shaders/point_light.vert.spv", "shaders/point_light.frag.spv", pipelineConfig);
+		lvePipeline = std::make_unique<LvePipeline>(lveDevice, "src/shaders/output-files/point_light.vert.spv", "src/shaders/output-files/point_light.frag.spv", pipelineConfig);
 	}
 	void PointLightSystem::update(FrameInfo& frameInfo, GlobalUbo& ubo)
 	{
