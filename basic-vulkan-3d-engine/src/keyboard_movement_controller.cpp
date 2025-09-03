@@ -2,9 +2,10 @@
 #include<limits>
 
 namespace lve {
-	//currently broken
+	//BUG: when holding input key, resizing or moving a window, releasing input key and resuming causes the previously held key to get stuck
 	void lve::KeyboardMovementController::moveInPlaneXZ(GLFWwindow* window, float dt, LveGameObject& gameObject)
 	{
+		dt = glm::min(dt, KeyboardMovementController::MAX_ALOWABLE_FRAMETIME);
 		glm::vec3* rotation = &gameObject.transform.rotation;
 		glm::vec3 rotate{ 0 };
 		if (glfwGetKey(window, keys.lookRight) == GLFW_PRESS) rotate.y += 1.f;

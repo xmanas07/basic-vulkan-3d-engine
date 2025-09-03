@@ -5,6 +5,7 @@
 #include "lve_window.hpp"
 namespace lve {
 	class KeyboardMovementController {
+		static constexpr float MAX_ALOWABLE_FRAMETIME = .067f;
 
 	public:
 		struct KeyMappings {

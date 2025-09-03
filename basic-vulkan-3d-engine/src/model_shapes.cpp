@@ -108,10 +108,10 @@ namespace lve {
 		float height = side * 0.8165f;
 		float sideHeight = side * .8660f;
 		std::array<LveModel::Vertex, 4> peaks;
-		peaks[0] = { {.0f,-height,.0f},{1.f,1.f,1.f} };
-		peaks[1] = { {.0f,.0f, sideHeight * 0.666f},{1.f,0.f,0.f} };
-		peaks[2] = { {-side * .5f,.0f,-sideHeight * 0.333f},{0.f,1.f,0.f} };
-		peaks[3] = { {side * .5f,.0f,-sideHeight * 0.333f},{0.f,0.f,1.f} };
+		peaks[0] = { {.0f,-height * 0.5f,.0f},{1.f,1.f,1.f} };
+		peaks[1] = { {.0f,height * 0.5f, sideHeight * 0.666f},{1.f,0.f,0.f} };
+		peaks[2] = { {-side * .5f,height * 0.5f,-sideHeight * 0.333f},{0.f,1.f,0.f} };
+		peaks[3] = { {side * .5f,height * 0.5f,-sideHeight * 0.333f},{0.f,0.f,1.f} };
 		return createSierpPyramidModel(device, peaks, depth);
 	}
 }

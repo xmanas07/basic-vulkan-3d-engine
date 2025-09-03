@@ -16,7 +16,6 @@ namespace lve {
 	public:
 		static constexpr int WIDTH = 800;
 		static constexpr int HEIGHT = 800;
-		static constexpr float MAX_ALOWABLE_FRAMETIME = .067f;
 
 		FirstApp();
 		~FirstApp();
@@ -27,6 +26,7 @@ namespace lve {
 
 	private:
 		void loadGameObjects();
+		void addGameObject(lve::LveGameObject gameObject);
 
 		LveWindow lveWindow{ WIDTH, HEIGHT, "Hello Vulkan!" };
 		LveDevice lveDevice{ lveWindow };

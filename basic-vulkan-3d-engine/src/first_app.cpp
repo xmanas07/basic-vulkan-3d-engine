@@ -68,6 +68,11 @@ namespace lve {
 		camera.setViewTarget(glm::vec3(-1.f, -2.f, 2.f), glm::vec3(0.f, 0.f, 2.5f));
 
 		auto viewerObject = LveGameObject::createGameObject();
+		//viewerObject.model = createSierpPyramidModel(lveDevice, 1.f, 1); // uncoment to demonstrate having a model in a viewer object
+
+		int viewerId = viewerObject.getId();
+		addGameObject(std::move(viewerObject));
+		LveGameObject& viewer = gameObjects.at(viewerId);
 		KeyboardMovementController cameraController{};
 
 		auto currentTime = std::chrono::high_resolution_clock::now();
@@ -78,11 +83,10 @@ namespace lve {
 			auto newTime = std::chrono::high_resolution_clock::now();
 			float frameTime = std::chrono::duration<float, std::chrono::seconds::period>(newTime - currentTime).count();
 			currentTime = newTime;
+			
 
-			frameTime = glm::min(frameTime, FirstApp::MAX_ALOWABLE_FRAMETIME);
-
-			cameraController.moveInPlaneXZ(lveWindow.getGLFWwindow(), frameTime, viewerObject);
-			camera.setViewYXZ(viewerObject.transform.translation, viewerObject.transform.rotation);
+			cameraController.moveInPlaneXZ(lveWindow.getGLFWwindow(), frameTime, viewer);
+			camera.setViewYXZ(viewer.transform.translation, viewer.transform.rotation);
 
 			float aspect = lveRenderer.getAspectRatio();
 			camera.setPerspectiveProjection(glm::radians(50.f), aspect, .1f, 10.f);
@@ -144,10 +148,9 @@ namespace lve {
 		pyramidVertices[1] = { {.0f,.5f,-.5f},{1.f,0.f,0.f} };
 		pyramidVertices[2] = { {.5f,.5f,.5f},{0.f,1.f,0.f} };
 		pyramidVertices[3] = { {-.5f,.5f,.5f},{0.f,0.f,1.f} };
-		//lveModel = createSierpPyramidModel(lveDevice, pyramidVertices, 3);
-		lveModel = createSierpPyramidModel(lveDevice, 1.f, 3);
+		
 		auto sierpPyramid = LveGameObject::createGameObject();
-		sierpPyramid.model = lveModel;
+		sierpPyramid.model = createSierpPyramidModel(lveDevice, 1.f, 3);
 		sierpPyramid.transform.translation = { 1.5f,-.5f,2.5f };
 		sierpPyramid.transform.scale = { 1.f,1.f,1.f };
 		gameObjects.emplace(sierpPyramid.getId(), std::move(sierpPyramid));
@@ -177,6 +180,11 @@ namespace lve {
 			pointLight.transform.translation = glm::vec3(rotateLight * glm::vec4(-1.f, -1.f, -1.f, -1.f));
 			gameObjects.emplace(pointLight.getId(), std::move(pointLight));
 		}
+	}
+
+	void FirstApp::addGameObject(lve::LveGameObject gameObject)
+	{
+		gameObjects.emplace(gameObject.getId(), std::move(gameObject));
 	}
 
 }
