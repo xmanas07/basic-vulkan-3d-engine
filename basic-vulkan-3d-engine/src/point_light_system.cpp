@@ -14,7 +14,7 @@
 
 
 
-namespace lve {
+namespace bve {
 
 	struct PointLightPushConstants {
 		glm::vec4 position{};
@@ -22,14 +22,14 @@ namespace lve {
 		float radius;
 	};
 
-		PointLightSystem::PointLightSystem(LveDevice& device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout) : lveDevice{ device }
+		PointLightSystem::PointLightSystem(BveDevice& device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout) : bveDevice{ device }
 	{
 		createPipelineLayout(globalSetLayout);
 		createPipeline(renderPass);
 	}
 	PointLightSystem::~PointLightSystem()
 	{
-		vkDestroyPipelineLayout(lveDevice.device(), pipelineLayout, nullptr);
+		vkDestroyPipelineLayout(bveDevice.device(), pipelineLayout, nullptr);
 	}
 
 	void PointLightSystem::createPipelineLayout(VkDescriptorSetLayout globalSetLayout)
@@ -47,7 +47,7 @@ namespace lve {
 		pipelineLayoutInfo.pSetLayouts = descriptorSetLayouts.data();
 		pipelineLayoutInfo.pushConstantRangeCount = 1;
 		pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange;
-		if (vkCreatePipelineLayout(lveDevice.device(), &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS)
+		if (vkCreatePipelineLayout(bveDevice.device(), &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS)
 		{
 			throw std::runtime_error("failed to create pipeline layout!");
 		}
@@ -57,13 +57,13 @@ namespace lve {
 		assert(pipelineLayout != nullptr && "Cannot create pipeline before pipeline layout");
 
 		PipelineConfigInfo pipelineConfig{};
-		LvePipeline::defaultPipelineConfigInfo(pipelineConfig);
-		LvePipeline::enableAlphaBlending(pipelineConfig);
+		BvePipeline::defaultPipelineConfigInfo(pipelineConfig);
+		BvePipeline::enableAlphaBlending(pipelineConfig);
 		pipelineConfig.attributeDescriptions.clear();
 		pipelineConfig.bindingDescriptions.clear();
 		pipelineConfig.renderPass = renderPass;
 		pipelineConfig.pipelineLayout = pipelineLayout;
-		lvePipeline = std::make_unique<LvePipeline>(lveDevice, "src/shaders/output-files/point_light.vert.spv", "src/shaders/output-files/point_light.frag.spv", pipelineConfig);
+		bvePipeline = std::make_unique<BvePipeline>(bveDevice, "src/shaders/output-files/point_light.vert.spv", "src/shaders/output-files/point_light.frag.spv", pipelineConfig);
 	}
 	void PointLightSystem::update(FrameInfo& frameInfo, GlobalUbo& ubo)
 	{
@@ -88,7 +88,7 @@ namespace lve {
 	void PointLightSystem::render(FrameInfo& frameInfo)
 	{
 		// sort objects by distance to camera
-		std::map<float, LveGameObject::id_t>  sorted;
+		std::map<float, BveGameObject::id_t>  sorted;
 		for (auto& kv : frameInfo.gameObjects) {
 			auto& obj = kv.second;
 			if (obj.pointLight == nullptr) continue;
@@ -100,7 +100,7 @@ namespace lve {
 		}
 
 
-		lvePipeline->bind(frameInfo.commandBuffer);
+		bvePipeline->bind(frameInfo.commandBuffer);
 
 		vkCmdBindDescriptorSets(
 			frameInfo.commandBuffer,

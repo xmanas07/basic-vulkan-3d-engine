@@ -1,9 +1,9 @@
 #include "model_shapes.hpp"
 
 
-namespace lve {
+namespace bve {
 
-	std::unique_ptr<LveModel> createSierpPyramidModel(LveDevice& device, const std::array<LveModel::Vertex, 4>& peaks, int depth) {
+	std::unique_ptr<BveModel> createSierpPyramidModel(BveDevice& device, const std::array<BveModel::Vertex, 4>& peaks, int depth) {
 		//calculate normal for each face - clockwise
 		std::array<glm::vec3, 4> faceNormals;
 		faceNormals[0] = glm::normalize(glm::cross(peaks[1].position - peaks[0].position, peaks[2].position - peaks[0].position));
@@ -14,18 +14,18 @@ namespace lve {
 
 
 		int nPyramids = static_cast<uint32_t>(std::pow(4, depth));
-		std::vector<std::array<LveModel::Vertex, 4>> outPyramidVector;
+		std::vector<std::array<BveModel::Vertex, 4>> outPyramidVector;
 		outPyramidVector.reserve(nPyramids);
 		outPyramidVector.emplace_back(peaks);
 
-		std::vector<std::array<LveModel::Vertex, 4>> helpPyramidVector;
+		std::vector<std::array<BveModel::Vertex, 4>> helpPyramidVector;
 		helpPyramidVector.reserve(nPyramids / 3);
 
 		// subdivide into 4 smaller pyramids depth times
 		for (size_t i = 0; i < depth; i++)
 		{
 			// divide each pyramid in outPyramidVector into 4 smaller
-			for (const std::array<LveModel::Vertex, 4>&pyramidVertexes : outPyramidVector) {
+			for (const std::array<BveModel::Vertex, 4>&pyramidVertexes : outPyramidVector) {
 				// pyramid 1
 				helpPyramidVector.push_back({
 					pyramidVertexes[0],
@@ -59,12 +59,12 @@ namespace lve {
 			helpPyramidVector.clear();
 		}
 
-		LveModel::Builder modelBuilder{};
+		BveModel::Builder modelBuilder{};
 		modelBuilder.vertices.reserve(nPyramids * 4);
 		modelBuilder.indices.reserve(nPyramids * 4 * 3);
 
 		int pyramidIdx = 0;
-		for (const std::array<LveModel::Vertex, 4>&pyramidVertexes : outPyramidVector) {
+		for (const std::array<BveModel::Vertex, 4>&pyramidVertexes : outPyramidVector) {
 
 			// create triangles indices
 			// triangle face 1
@@ -100,14 +100,14 @@ namespace lve {
 			modelBuilder.vertices.back().normal = faceNormals[3];
 		}
 
-		return std::make_unique<LveModel>(device, modelBuilder);
+		return std::make_unique<BveModel>(device, modelBuilder);
 	}
-	std::unique_ptr<LveModel> createSierpPyramidModel(LveDevice& device, float side, int depth)
+	std::unique_ptr<BveModel> createSierpPyramidModel(BveDevice& device, float side, int depth)
 	{
 
 		float height = side * 0.8165f;
 		float sideHeight = side * .8660f;
-		std::array<LveModel::Vertex, 4> peaks;
+		std::array<BveModel::Vertex, 4> peaks;
 		peaks[0] = { {.0f,-height * 0.5f,.0f},{1.f,1.f,1.f} };
 		peaks[1] = { {.0f,height * 0.5f, sideHeight * 0.666f},{1.f,0.f,0.f} };
 		peaks[2] = { {-side * .5f,height * 0.5f,-sideHeight * 0.333f},{0.f,1.f,0.f} };

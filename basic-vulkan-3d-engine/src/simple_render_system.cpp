@@ -13,21 +13,21 @@
 
 
 
-namespace lve {
+namespace bve {
 
 	struct SimplePushConstantData {
 		glm::mat4 modelMatrix{ 1.f };
 		glm::mat4 normalMatrix{ 1.f };
 	};
 
-	SimpleRenderSystem::SimpleRenderSystem(LveDevice& device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout) : lveDevice{device}
+	SimpleRenderSystem::SimpleRenderSystem(BveDevice& device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout) : bveDevice{device}
 	{
 		createPipelineLayout(globalSetLayout);
 		createPipeline(renderPass);
 	}
 	SimpleRenderSystem::~SimpleRenderSystem()
 	{
-		vkDestroyPipelineLayout(lveDevice.device(), pipelineLayout, nullptr);
+		vkDestroyPipelineLayout(bveDevice.device(), pipelineLayout, nullptr);
 	}
 
 	void SimpleRenderSystem::createPipelineLayout(VkDescriptorSetLayout globalSetLayout)
@@ -45,7 +45,7 @@ namespace lve {
 		pipelineLayoutInfo.pSetLayouts = descriptorSetLayouts.data();
 		pipelineLayoutInfo.pushConstantRangeCount = 1;
 		pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange;
-		if (vkCreatePipelineLayout(lveDevice.device(), &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS)
+		if (vkCreatePipelineLayout(bveDevice.device(), &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS)
 		{
 			throw std::runtime_error("failed to create pipeline layout!");
 		}
@@ -55,14 +55,14 @@ namespace lve {
 		assert(pipelineLayout != nullptr && "Cannot create pipeline before pipeline layout");
 
 		PipelineConfigInfo pipelineConfig{};
-		LvePipeline::defaultPipelineConfigInfo(pipelineConfig);
+		BvePipeline::defaultPipelineConfigInfo(pipelineConfig);
 		pipelineConfig.renderPass = renderPass;
 		pipelineConfig.pipelineLayout = pipelineLayout;
-		lvePipeline = std::make_unique<LvePipeline>(lveDevice, "src/shaders/output-files/simple_shader.vert.spv", "src/shaders/output-files/simple_shader.frag.spv", pipelineConfig);
+		bvePipeline = std::make_unique<BvePipeline>(bveDevice, "src/shaders/output-files/simple_shader.vert.spv", "src/shaders/output-files/simple_shader.frag.spv", pipelineConfig);
 	}
 	void SimpleRenderSystem::renderGameObjects(FrameInfo& frameInfo)
 	{
-		lvePipeline->bind(frameInfo.commandBuffer);
+		bvePipeline->bind(frameInfo.commandBuffer);
 
 		vkCmdBindDescriptorSets(
 			frameInfo.commandBuffer,

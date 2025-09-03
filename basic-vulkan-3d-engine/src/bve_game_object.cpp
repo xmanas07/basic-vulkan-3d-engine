@@ -1,6 +1,6 @@
-#include "lve_game_object.hpp"
+#include "bve_game_object.hpp"
 
-namespace lve {
+namespace bve {
 
     glm::mat4 TransformComponent::mat4() {
         const float c3 = glm::cos(rotation.z);
@@ -59,9 +59,9 @@ namespace lve {
         };
     }
 
-    LveGameObject LveGameObject::makePointLight(float intensity, float radius, glm::vec3 color)
+    BveGameObject BveGameObject::makePointLight(float intensity, float radius, glm::vec3 color)
     {
-        LveGameObject gameObject = LveGameObject::createGameObject();
+        BveGameObject gameObject = BveGameObject::createGameObject();
         gameObject.color = color;
         gameObject.transform.scale.x = radius;
         gameObject.pointLight = std::make_unique<PointLightComponent>();
@@ -69,4 +69,4 @@ namespace lve {
         return gameObject;
     }
 
-}  // namespace lve
+}  // namespace bve

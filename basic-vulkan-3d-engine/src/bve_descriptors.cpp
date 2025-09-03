@@ -1,14 +1,14 @@
-#include "lve_descriptors.hpp"
+#include "bve_descriptors.hpp"
 
 // std
 #include <cassert>
 #include <stdexcept>
 
-namespace lve {
+namespace bve {
 
     // *************** Descriptor Set Layout Builder *********************
 
-    LveDescriptorSetLayout::Builder& LveDescriptorSetLayout::Builder::addBinding(
+    BveDescriptorSetLayout::Builder& BveDescriptorSetLayout::Builder::addBinding(
         uint32_t binding,
         VkDescriptorType descriptorType,
         VkShaderStageFlags stageFlags,
@@ -23,15 +23,15 @@ namespace lve {
         return *this;
     }
 
-    std::unique_ptr<LveDescriptorSetLayout> LveDescriptorSetLayout::Builder::build() const {
-        return std::make_unique<LveDescriptorSetLayout>(lveDevice, bindings);
+    std::unique_ptr<BveDescriptorSetLayout> BveDescriptorSetLayout::Builder::build() const {
+        return std::make_unique<BveDescriptorSetLayout>(bveDevice, bindings);
     }
 
     // *************** Descriptor Set Layout *********************
 
-    LveDescriptorSetLayout::LveDescriptorSetLayout(
-        LveDevice& lveDevice, std::unordered_map<uint32_t, VkDescriptorSetLayoutBinding> bindings)
-        : lveDevice{ lveDevice }, bindings{ bindings } {
+    BveDescriptorSetLayout::BveDescriptorSetLayout(
+        BveDevice& bveDevice, std::unordered_map<uint32_t, VkDescriptorSetLayoutBinding> bindings)
+        : bveDevice{ bveDevice }, bindings{ bindings } {
         std::vector<VkDescriptorSetLayoutBinding> setLayoutBindings{};
         for (auto kv : bindings) {
             setLayoutBindings.push_back(kv.second);
@@ -43,7 +43,7 @@ namespace lve {
         descriptorSetLayoutInfo.pBindings = setLayoutBindings.data();
 
         if (vkCreateDescriptorSetLayout(
-            lveDevice.device(),
+            bveDevice.device(),
             &descriptorSetLayoutInfo,
             nullptr,
             &descriptorSetLayout) != VK_SUCCESS) {
@@ -51,40 +51,40 @@ namespace lve {
         }
     }
 
-    LveDescriptorSetLayout::~LveDescriptorSetLayout() {
-        vkDestroyDescriptorSetLayout(lveDevice.device(), descriptorSetLayout, nullptr);
+    BveDescriptorSetLayout::~BveDescriptorSetLayout() {
+        vkDestroyDescriptorSetLayout(bveDevice.device(), descriptorSetLayout, nullptr);
     }
 
     // *************** Descriptor Pool Builder *********************
 
-    LveDescriptorPool::Builder& LveDescriptorPool::Builder::addPoolSize(
+    BveDescriptorPool::Builder& BveDescriptorPool::Builder::addPoolSize(
         VkDescriptorType descriptorType, uint32_t count) {
         poolSizes.push_back({ descriptorType, count });
         return *this;
     }
 
-    LveDescriptorPool::Builder& LveDescriptorPool::Builder::setPoolFlags(
+    BveDescriptorPool::Builder& BveDescriptorPool::Builder::setPoolFlags(
         VkDescriptorPoolCreateFlags flags) {
         poolFlags = flags;
         return *this;
     }
-    LveDescriptorPool::Builder& LveDescriptorPool::Builder::setMaxSets(uint32_t count) {
+    BveDescriptorPool::Builder& BveDescriptorPool::Builder::setMaxSets(uint32_t count) {
         maxSets = count;
         return *this;
     }
 
-    std::unique_ptr<LveDescriptorPool> LveDescriptorPool::Builder::build() const {
-        return std::make_unique<LveDescriptorPool>(lveDevice, maxSets, poolFlags, poolSizes);
+    std::unique_ptr<BveDescriptorPool> BveDescriptorPool::Builder::build() const {
+        return std::make_unique<BveDescriptorPool>(bveDevice, maxSets, poolFlags, poolSizes);
     }
 
     // *************** Descriptor Pool *********************
 
-    LveDescriptorPool::LveDescriptorPool(
-        LveDevice& lveDevice,
+    BveDescriptorPool::BveDescriptorPool(
+        BveDevice& bveDevice,
         uint32_t maxSets,
         VkDescriptorPoolCreateFlags poolFlags,
         const std::vector<VkDescriptorPoolSize>& poolSizes)
-        : lveDevice{ lveDevice } {
+        : bveDevice{ bveDevice } {
         VkDescriptorPoolCreateInfo descriptorPoolInfo{};
         descriptorPoolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
         descriptorPoolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
@@ -92,17 +92,17 @@ namespace lve {
         descriptorPoolInfo.maxSets = maxSets;
         descriptorPoolInfo.flags = poolFlags;
 
-        if (vkCreateDescriptorPool(lveDevice.device(), &descriptorPoolInfo, nullptr, &descriptorPool) !=
+        if (vkCreateDescriptorPool(bveDevice.device(), &descriptorPoolInfo, nullptr, &descriptorPool) !=
             VK_SUCCESS) {
             throw std::runtime_error("failed to create descriptor pool!");
         }
     }
 
-    LveDescriptorPool::~LveDescriptorPool() {
-        vkDestroyDescriptorPool(lveDevice.device(), descriptorPool, nullptr);
+    BveDescriptorPool::~BveDescriptorPool() {
+        vkDestroyDescriptorPool(bveDevice.device(), descriptorPool, nullptr);
     }
 
-    bool LveDescriptorPool::allocateDescriptor(
+    bool BveDescriptorPool::allocateDescriptor(
         const VkDescriptorSetLayout descriptorSetLayout, VkDescriptorSet& descriptor) const {
         VkDescriptorSetAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
@@ -112,31 +112,31 @@ namespace lve {
 
         // Might want to create a "DescriptorPoolManager" class that handles this case, and builds
         // a new pool whenever an old pool fills up. But this is beyond our current scope
-        if (vkAllocateDescriptorSets(lveDevice.device(), &allocInfo, &descriptor) != VK_SUCCESS) {
+        if (vkAllocateDescriptorSets(bveDevice.device(), &allocInfo, &descriptor) != VK_SUCCESS) {
             return false;
         }
         return true;
     }
 
-    void LveDescriptorPool::freeDescriptors(std::vector<VkDescriptorSet>& descriptors) const {
+    void BveDescriptorPool::freeDescriptors(std::vector<VkDescriptorSet>& descriptors) const {
         vkFreeDescriptorSets(
-            lveDevice.device(),
+            bveDevice.device(),
             descriptorPool,
             static_cast<uint32_t>(descriptors.size()),
             descriptors.data());
     }
 
-    void LveDescriptorPool::resetPool() {
-        vkResetDescriptorPool(lveDevice.device(), descriptorPool, 0);
+    void BveDescriptorPool::resetPool() {
+        vkResetDescriptorPool(bveDevice.device(), descriptorPool, 0);
     }
 
     // *************** Descriptor Writer *********************
 
-    LveDescriptorWriter::LveDescriptorWriter(LveDescriptorSetLayout& setLayout, LveDescriptorPool& pool)
+    BveDescriptorWriter::BveDescriptorWriter(BveDescriptorSetLayout& setLayout, BveDescriptorPool& pool)
         : setLayout{ setLayout }, pool{ pool } {
     }
 
-    LveDescriptorWriter& LveDescriptorWriter::writeBuffer(
+    BveDescriptorWriter& BveDescriptorWriter::writeBuffer(
         uint32_t binding, VkDescriptorBufferInfo* bufferInfo) {
         assert(setLayout.bindings.count(binding) == 1 && "Layout does not contain specified binding");
 
@@ -157,7 +157,7 @@ namespace lve {
         return *this;
     }
 
-    LveDescriptorWriter& LveDescriptorWriter::writeImage(
+    BveDescriptorWriter& BveDescriptorWriter::writeImage(
         uint32_t binding, VkDescriptorImageInfo* imageInfo) {
         assert(setLayout.bindings.count(binding) == 1 && "Layout does not contain specified binding");
 
@@ -178,7 +178,7 @@ namespace lve {
         return *this;
     }
 
-    bool LveDescriptorWriter::build(VkDescriptorSet& set) {
+    bool BveDescriptorWriter::build(VkDescriptorSet& set) {
         bool success = pool.allocateDescriptor(setLayout.getDescriptorSetLayout(), set);
         if (!success) {
             return false;
@@ -187,11 +187,11 @@ namespace lve {
         return true;
     }
 
-    void LveDescriptorWriter::overwrite(VkDescriptorSet& set) {
+    void BveDescriptorWriter::overwrite(VkDescriptorSet& set) {
         for (auto& write : writes) {
             write.dstSet = set;
         }
-        vkUpdateDescriptorSets(pool.lveDevice.device(), writes.size(), writes.data(), 0, nullptr);
+        vkUpdateDescriptorSets(pool.bveDevice.device(), writes.size(), writes.data(), 0, nullptr);
     }
 
-}  // namespace lve
+}  // namespace bve

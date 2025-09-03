@@ -95,16 +95,20 @@
     <VcpkgEnableManifest>true</VcpkgEnableManifest>
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <VcpkgInstalledDir>$(SolutionDir)</VcpkgInstalledDir>
+    <VcpkgInstalledDir>
+    </VcpkgInstalledDir>
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <VcpkgInstalledDir>$(SolutionDir)</VcpkgInstalledDir>
+    <VcpkgInstalledDir>
+    </VcpkgInstalledDir>
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <VcpkgInstalledDir>$(SolutionDir)</VcpkgInstalledDir>
+    <VcpkgInstalledDir>
+    </VcpkgInstalledDir>
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <VcpkgInstalledDir>$(SolutionDir)</VcpkgInstalledDir>
+    <VcpkgInstalledDir>
+    </VcpkgInstalledDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -195,38 +199,40 @@
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\bve_texture.cpp" />
     <ClCompile Include="src\first_app.cpp" />
     <ClCompile Include="src\keyboard_movement_controller.cpp" />
-    <ClCompile Include="src\lve_buffer.cpp" />
-    <ClCompile Include="src\lve_camera.cpp" />
-    <ClCompile Include="src\lve_descriptors.cpp" />
-    <ClCompile Include="src\lve_device.cpp" />
-    <ClCompile Include="src\lve_game_object.cpp" />
-    <ClCompile Include="src\lve_model.cpp" />
-    <ClCompile Include="src\lve_pipeline.cpp" />
-    <ClCompile Include="src\lve_renderer.cpp" />
-    <ClCompile Include="src\lve_window.cpp" />
+    <ClCompile Include="src\bve_buffer.cpp" />
+    <ClCompile Include="src\bve_camera.cpp" />
+    <ClCompile Include="src\bve_descriptors.cpp" />
+    <ClCompile Include="src\bve_device.cpp" />
+    <ClCompile Include="src\bve_game_object.cpp" />
+    <ClCompile Include="src\bve_model.cpp" />
+    <ClCompile Include="src\bve_pipeline.cpp" />
+    <ClCompile Include="src\bve_renderer.cpp" />
+    <ClCompile Include="src\bve_window.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\lve_swap_chain.cpp" />
+    <ClCompile Include="src\bve_swap_chain.cpp" />
     <ClCompile Include="src\model_shapes.cpp" />
     <ClCompile Include="src\point_light_system.cpp" />
     <ClCompile Include="src\simple_render_system.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\bve_texture.hpp" />
     <ClInclude Include="src\first_app.hpp" />
     <ClInclude Include="src\keyboard_movement_controller.hpp" />
-    <ClInclude Include="src\lve_buffer.hpp" />
-    <ClInclude Include="src\lve_camera.hpp" />
-    <ClInclude Include="src\lve_descriptors.hpp" />
-    <ClInclude Include="src\lve_device.hpp" />
-    <ClInclude Include="src\lve_frame_info.hpp" />
-    <ClInclude Include="src\lve_game_object.hpp" />
-    <ClInclude Include="src\lve_model.hpp" />
-    <ClInclude Include="src\lve_pipeline.hpp" />
-    <ClInclude Include="src\lve_renderer.hpp" />
-    <ClInclude Include="src\lve_utils.hpp" />
-    <ClInclude Include="src\lve_window.hpp" />
-    <ClInclude Include="src\lve_swap_chain.hpp" />
+    <ClInclude Include="src\bve_buffer.hpp" />
+    <ClInclude Include="src\bve_camera.hpp" />
+    <ClInclude Include="src\bve_descriptors.hpp" />
+    <ClInclude Include="src\bve_device.hpp" />
+    <ClInclude Include="src\bve_frame_info.hpp" />
+    <ClInclude Include="src\bve_game_object.hpp" />
+    <ClInclude Include="src\bve_model.hpp" />
+    <ClInclude Include="src\bve_pipeline.hpp" />
+    <ClInclude Include="src\bve_renderer.hpp" />
+    <ClInclude Include="src\bve_utils.hpp" />
+    <ClInclude Include="src\bve_window.hpp" />
+    <ClInclude Include="src\bve_swap_chain.hpp" />
     <ClInclude Include="src\model_shapes.hpp" />
     <ClInclude Include="src\point_light_system.hpp" />
     <ClInclude Include="src\simple_render_system.hpp" />

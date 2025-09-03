@@ -4,8 +4,8 @@
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <glm/glm.hpp>
 
-namespace lve {
-	class LveCamera {
+namespace bve {
+	class BveCamera {
 	public:
 
 		void setOrthographicProjection(float left, float right, float top, float bottom, float near, float far);

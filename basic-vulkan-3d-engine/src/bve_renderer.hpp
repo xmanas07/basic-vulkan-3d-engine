@@ -1,27 +1,27 @@
 #pragma  once
 
-#include "lve_window.hpp"
-#include "lve_device.hpp"
-#include "lve_swap_chain.hpp"
-#include "lve_model.hpp"
+#include "bve_window.hpp"
+#include "bve_device.hpp"
+#include "bve_swap_chain.hpp"
+#include "bve_model.hpp"
 
 //std
 #include <memory>
 #include <vector>
 #include <cassert>
 
-namespace lve {
-	class LveRenderer {
+namespace bve {
+	class BveRenderer {
 
 	public:
 
-		LveRenderer(LveWindow& window, LveDevice& device);
-		~LveRenderer();
-		LveRenderer(const LveRenderer&) = delete;
-		LveRenderer& operator=(const LveRenderer&) = delete;
+		BveRenderer(BveWindow& window, BveDevice& device);
+		~BveRenderer();
+		BveRenderer(const BveRenderer&) = delete;
+		BveRenderer& operator=(const BveRenderer&) = delete;
 
-		VkRenderPass getSwapchainRenderPass() const { return lveSwapChain->getRenderPass(); }
-		float getAspectRatio() const { return lveSwapChain->extentAspectRatio(); }
+		VkRenderPass getSwapchainRenderPass() const { return bveSwapChain->getRenderPass(); }
+		float getAspectRatio() const { return bveSwapChain->extentAspectRatio(); }
 		bool isFrameInProgress() const { return isFrameStarted; }
 
 		VkCommandBuffer getCurrentCommandBuffer() const {
@@ -43,13 +43,13 @@ namespace lve {
 		void freeCommandBuffers();
 		void recreateSwapChain();
 
-		LveWindow& lveWindow;
-		LveDevice& lveDevice;
-		std::unique_ptr<LveSwapChain> lveSwapChain;
+		BveWindow& bveWindow;
+		BveDevice& bveDevice;
+		std::unique_ptr<BveSwapChain> bveSwapChain;
 		std::vector<VkCommandBuffer> commandBuffers;
 
 		uint32_t currentImageIndex;
 		int currentFrameIndex = 0;
 		bool isFrameStarted = false;
 	};
-} //namespace lve
+} //namespace bve

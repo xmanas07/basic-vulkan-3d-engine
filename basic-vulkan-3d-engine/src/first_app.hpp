@@ -1,16 +1,16 @@
 #pragma  once
 
-#include "lve_device.hpp"
-#include "lve_game_object.hpp"
-#include "lve_renderer.hpp"
-#include "lve_window.hpp"
-#include "lve_descriptors.hpp"
+#include "bve_device.hpp"
+#include "bve_game_object.hpp"
+#include "bve_renderer.hpp"
+#include "bve_window.hpp"
+#include "bve_descriptors.hpp"
 
 //std
 #include <memory>
 #include <vector>
 
-namespace lve {
+namespace bve {
 	class FirstApp {
 
 	public:
@@ -26,14 +26,14 @@ namespace lve {
 
 	private:
 		void loadGameObjects();
-		void addGameObject(lve::LveGameObject gameObject);
+		void addGameObject(bve::BveGameObject gameObject);
 
-		LveWindow lveWindow{ WIDTH, HEIGHT, "Hello Vulkan!" };
-		LveDevice lveDevice{ lveWindow };
-		LveRenderer lveRenderer{ lveWindow, lveDevice };
+		BveWindow bveWindow{ WIDTH, HEIGHT, "Hello Vulkan!" };
+		BveDevice bveDevice{ bveWindow };
+		BveRenderer bveRenderer{ bveWindow, bveDevice };
 
 		// note: order of declarations matters
-		std::unique_ptr<LveDescriptorPool> globalPool{};
-		LveGameObject::Map gameObjects;
+		std::unique_ptr<BveDescriptorPool> globalPool{};
+		BveGameObject::Map gameObjects;
 	};
-} //namespace lve
+} //namespace bve

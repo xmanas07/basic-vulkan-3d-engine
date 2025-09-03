@@ -1,6 +1,6 @@
 #pragma once
 
-#include "lve_model.hpp"
+#include "bve_model.hpp"
 
 // libs
 #include <glm/gtc/matrix_transform.hpp>
@@ -9,7 +9,7 @@
 #include <memory>
 #include <unordered_map>
 
-namespace lve {
+namespace bve {
 
     struct TransformComponent {
         glm::vec3 translation{};
@@ -28,21 +28,21 @@ namespace lve {
         float lightIntensity = 1.f;
     };
 
-    class LveGameObject {
+    class BveGameObject {
     public:
         using id_t = unsigned int;
-        using Map = std::unordered_map<id_t, LveGameObject>;
+        using Map = std::unordered_map<id_t, BveGameObject>;
 
-        static LveGameObject createGameObject() {
+        static BveGameObject createGameObject() {
             static id_t currentId = 0;
-            return LveGameObject{ currentId++ };
+            return BveGameObject{ currentId++ };
         }
-        static LveGameObject makePointLight(float intensity = 10.f, float radius = 0.1f, glm::vec3 color = glm::vec3(1.f));
+        static BveGameObject makePointLight(float intensity = 10.f, float radius = 0.1f, glm::vec3 color = glm::vec3(1.f));
 
-        LveGameObject(const LveGameObject&) = delete;
-        LveGameObject& operator=(const LveGameObject&) = delete;
-        LveGameObject(LveGameObject&&) = default;
-        LveGameObject& operator=(LveGameObject&&) = default;
+        BveGameObject(const BveGameObject&) = delete;
+        BveGameObject& operator=(const BveGameObject&) = delete;
+        BveGameObject(BveGameObject&&) = default;
+        BveGameObject& operator=(BveGameObject&&) = default;
 
         id_t getId() { return id; }
 
@@ -50,12 +50,12 @@ namespace lve {
         TransformComponent transform{};
 
         // Optional pointer components
-        std::shared_ptr<LveModel> model{};
+        std::shared_ptr<BveModel> model{};
         std::unique_ptr<PointLightComponent> pointLight = nullptr;
 
     private:
-        LveGameObject(id_t objId) : id{ objId } {}
+        BveGameObject(id_t objId) : id{ objId } {}
 
         id_t id;
     };
-}  // namespace lve
+}  // namespace bve

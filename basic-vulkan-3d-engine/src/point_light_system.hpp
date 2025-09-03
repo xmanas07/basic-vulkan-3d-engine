@@ -1,19 +1,19 @@
 #pragma  once
 
-#include "lve_camera.hpp"
-#include "lve_device.hpp"
-#include "lve_game_object.hpp"
-#include "lve_pipeline.hpp"
-#include "lve_frame_info.hpp"
+#include "bve_camera.hpp"
+#include "bve_device.hpp"
+#include "bve_game_object.hpp"
+#include "bve_pipeline.hpp"
+#include "bve_frame_info.hpp"
 
 //std
 #include <memory>
 
-namespace lve {
+namespace bve {
 	class PointLightSystem {
 
 	public:
-		PointLightSystem(LveDevice& device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);
+		PointLightSystem(BveDevice& device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);
 		~PointLightSystem();
 		PointLightSystem(const PointLightSystem&) = delete;
 		PointLightSystem& operator=(const PointLightSystem&) = delete;
@@ -24,9 +24,9 @@ namespace lve {
 		void createPipelineLayout(VkDescriptorSetLayout globalSetLayout);
 		void createPipeline(VkRenderPass renderPass);
 
-		LveDevice& lveDevice;
+		BveDevice& bveDevice;
 
-		std::unique_ptr<LvePipeline> lvePipeline;
+		std::unique_ptr<BvePipeline> bvePipeline;
 		VkPipelineLayout pipelineLayout;
 	};
-} //namespace lve
+} //namespace bve

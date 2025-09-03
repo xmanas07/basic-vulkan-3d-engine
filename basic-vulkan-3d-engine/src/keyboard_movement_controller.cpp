@@ -1,9 +1,9 @@
 #include "keyboard_movement_controller.hpp"
 #include<limits>
 
-namespace lve {
+namespace bve {
 	//BUG: when holding input key, resizing or moving a window, releasing input key and resuming causes the previously held key to get stuck
-	void lve::KeyboardMovementController::moveInPlaneXZ(GLFWwindow* window, float dt, LveGameObject& gameObject)
+	void bve::KeyboardMovementController::moveInPlaneXZ(GLFWwindow* window, float dt, BveGameObject& gameObject)
 	{
 		dt = glm::min(dt, KeyboardMovementController::MAX_ALOWABLE_FRAMETIME);
 		glm::vec3* rotation = &gameObject.transform.rotation;

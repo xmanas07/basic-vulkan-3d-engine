@@ -1,22 +1,22 @@
 #pragma once
 
-#include "lve_device.hpp"
+#include "bve_device.hpp"
 
-namespace lve {
+namespace bve {
 
-    class LveBuffer {
+    class BveBuffer {
     public:
-        LveBuffer(
-            LveDevice& device,
+        BveBuffer(
+            BveDevice& device,
             VkDeviceSize instanceSize,
             uint32_t instanceCount,
             VkBufferUsageFlags usageFlags,
             VkMemoryPropertyFlags memoryPropertyFlags,
             VkDeviceSize minOffsetAlignment = 1);
-        ~LveBuffer();
+        ~BveBuffer();
 
-        LveBuffer(const LveBuffer&) = delete;
-        LveBuffer& operator=(const LveBuffer&) = delete;
+        BveBuffer(const BveBuffer&) = delete;
+        BveBuffer& operator=(const BveBuffer&) = delete;
 
         VkResult map(VkDeviceSize size = VK_WHOLE_SIZE, VkDeviceSize offset = 0);
         void unmap();
@@ -43,7 +43,7 @@ namespace lve {
     private:
         static VkDeviceSize getAlignment(VkDeviceSize instanceSize, VkDeviceSize minOffsetAlignment);
 
-        LveDevice& lveDevice;
+        BveDevice& bveDevice;
         void* mapped = nullptr;
         VkBuffer buffer = VK_NULL_HANDLE;
         VkDeviceMemory memory = VK_NULL_HANDLE;
@@ -56,4 +56,4 @@ namespace lve {
         VkMemoryPropertyFlags memoryPropertyFlags;
     };
 
-}  // namespace lve
+}  // namespace bve

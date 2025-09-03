@@ -2,7 +2,7 @@
 
 #include <functional>
 
-namespace lve {
+namespace bve {
 
 	// from: https://stackoverflow.com/a/57595105
 	template <typename T, typename... Rest>
@@ -11,4 +11,4 @@ namespace lve {
 		(hashCombine(seed, rest), ...);
 	};
 
-}  // namespace lve
+}  // namespace bve

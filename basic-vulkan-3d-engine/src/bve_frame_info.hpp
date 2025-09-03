@@ -1,12 +1,12 @@
 #pragma once
 
-#include "lve_camera.hpp"
-#include "lve_game_object.hpp"
+#include "bve_camera.hpp"
+#include "bve_game_object.hpp"
 
 // lib
 #include <vulkan/vulkan.h>
 
-namespace lve {
+namespace bve {
 
 #define MAX_LIGHTS 10
 
@@ -29,8 +29,8 @@ namespace lve {
 		int frameIndex;
 		float frameTime;
 		VkCommandBuffer commandBuffer;
-		LveCamera& camera;
+		BveCamera& camera;
 		VkDescriptorSet globalDescriptorSet;
-		LveGameObject::Map& gameObjects;
+		BveGameObject::Map& gameObjects;
 	};
 }

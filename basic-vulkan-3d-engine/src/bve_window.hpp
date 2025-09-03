@@ -2,14 +2,14 @@
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 #include <string>
-namespace lve {
-	class LveWindow {
+namespace bve {
+	class BveWindow {
 	public:
-		LveWindow(int w, int h, std::string name);
-		~LveWindow(); 
+		BveWindow(int w, int h, std::string name);
+		~BveWindow(); 
 
-		LveWindow(const LveWindow&) = delete;
-		LveWindow& operator=(const LveWindow&) = delete;
+		BveWindow(const BveWindow&) = delete;
+		BveWindow& operator=(const BveWindow&) = delete;
 
 		bool shouldClose() { return glfwWindowShouldClose(window); }
 		VkExtent2D getExtent() { return { static_cast<uint32_t>(width), static_cast<uint32_t>(height) }; }
@@ -31,4 +31,4 @@ namespace lve {
 		std::string windowName;
 		GLFWwindow *window;
 	};
-}	// namespace lve
+}	// namespace bve

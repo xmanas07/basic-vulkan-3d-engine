@@ -1,30 +1,30 @@
-#include "lve_pipeline.hpp"
+#include "bve_pipeline.hpp"
 
-#include "lve_model.hpp"
+#include "bve_model.hpp"
 
 #include <fstream>
 #include <iostream>
 #include <cassert>
 
-namespace lve {
+namespace bve {
 
-	LvePipeline::LvePipeline(
-			LveDevice &device, 
+	BvePipeline::BvePipeline(
+			BveDevice &device, 
 			const std::string& vertFilepath, 
 			const std::string& fragFilepath, 
-			const PipelineConfigInfo& configInfo) : lveDevice{device}
+			const PipelineConfigInfo& configInfo) : bveDevice{device}
 	{
 		createGraphicsPipeline(vertFilepath, fragFilepath, configInfo);
 	}
 
-	LvePipeline::~LvePipeline()
+	BvePipeline::~BvePipeline()
 	{
-		vkDestroyShaderModule(lveDevice.device(), vertShaderModule, nullptr);
-		vkDestroyShaderModule(lveDevice.device(), fragShaderModule, nullptr);
-		vkDestroyPipeline(lveDevice.device(), graphicsPipeline, nullptr);
+		vkDestroyShaderModule(bveDevice.device(), vertShaderModule, nullptr);
+		vkDestroyShaderModule(bveDevice.device(), fragShaderModule, nullptr);
+		vkDestroyPipeline(bveDevice.device(), graphicsPipeline, nullptr);
 	}
 
-    std::vector<char> LvePipeline::readFile(const std::string &filepath)
+    std::vector<char> BvePipeline::readFile(const std::string &filepath)
     {
 		std::ifstream file{ filepath, std::ios::ate | std::ios::binary };
 		if (!file.is_open()) {
@@ -40,7 +40,7 @@ namespace lve {
 		return buffer;
 	}
 
-	void LvePipeline::createGraphicsPipeline(
+	void BvePipeline::createGraphicsPipeline(
 			const std::string& vertFilepath, 
 			const std::string& fragFilepath,
 			const PipelineConfigInfo& configInfo)
@@ -102,30 +102,30 @@ namespace lve {
 		pipelineInfo.basePipelineIndex = -1;
 		pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
 
-		if (vkCreateGraphicsPipelines(lveDevice.device(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &graphicsPipeline) != VK_SUCCESS)
+		if (vkCreateGraphicsPipelines(bveDevice.device(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &graphicsPipeline) != VK_SUCCESS)
 		{
 			throw std::runtime_error("failed to create graphics pipeline");
 		}
 
 
 	}
-    void LvePipeline::createShaderModule(const std::vector<char> &code, VkShaderModule *shaderModule)
+    void BvePipeline::createShaderModule(const std::vector<char> &code, VkShaderModule *shaderModule)
     {
 		VkShaderModuleCreateInfo createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
 		createInfo.codeSize = code.size();
 		createInfo.pCode = reinterpret_cast<const uint32_t *>(code.data());
 
-		if (vkCreateShaderModule(lveDevice.device(), &createInfo, nullptr, shaderModule) != VK_SUCCESS) {
+		if (vkCreateShaderModule(bveDevice.device(), &createInfo, nullptr, shaderModule) != VK_SUCCESS) {
 			throw std::runtime_error("failed to create shader module!");
 		}
 		
     }
-	void LvePipeline::bind(VkCommandBuffer commandBuffer)
+	void BvePipeline::bind(VkCommandBuffer commandBuffer)
 	{
 		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
 	}
-	void LvePipeline::defaultPipelineConfigInfo(PipelineConfigInfo& configInfo)
+	void BvePipeline::defaultPipelineConfigInfo(PipelineConfigInfo& configInfo)
     {
 		configInfo.inputAssemblyInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
 		configInfo.inputAssemblyInfo.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
@@ -198,10 +198,10 @@ namespace lve {
 		static_cast<uint32_t>(configInfo.dynamicStateEnables.size());
 		configInfo.dynamicStateInfo.flags = 0;
 
-		configInfo.bindingDescriptions = LveModel::Vertex::getBindingDescriptions();
-		configInfo.attributeDescriptions = LveModel::Vertex::getAttributeDescriptions();
+		configInfo.bindingDescriptions = BveModel::Vertex::getBindingDescriptions();
+		configInfo.attributeDescriptions = BveModel::Vertex::getAttributeDescriptions();
 	}
-	void LvePipeline::enableAlphaBlending(PipelineConfigInfo& configInfo)
+	void BvePipeline::enableAlphaBlending(PipelineConfigInfo& configInfo)
 	{
 		configInfo.colorBlendAttachment.colorWriteMask =
 			VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT |

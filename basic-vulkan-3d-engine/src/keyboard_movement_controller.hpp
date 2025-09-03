@@ -1,9 +1,9 @@
 #pragma once
 
 
-#include "lve_game_object.hpp"
-#include "lve_window.hpp"
-namespace lve {
+#include "bve_game_object.hpp"
+#include "bve_window.hpp"
+namespace bve {
 	class KeyboardMovementController {
 		static constexpr float MAX_ALOWABLE_FRAMETIME = .067f;
 
@@ -24,8 +24,8 @@ namespace lve {
 			int toggleLookCenter = GLFW_KEY_L;
 		};
 
-		void moveInSpace(GLFWwindow* window, float dt, LveGameObject& gameObject);
-		void moveInPlaneXZ(GLFWwindow* window, float dt, LveGameObject& gameObject);
+		void moveInSpace(GLFWwindow* window, float dt, BveGameObject& gameObject);
+		void moveInPlaneXZ(GLFWwindow* window, float dt, BveGameObject& gameObject);
 
 		KeyMappings keys{};
 		float moveSpeed{ 1.5f };
