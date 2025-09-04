@@ -57,5 +57,5 @@ void main() {
 
 	vec3 imageColor = texture(image, fragUV).rgb;
 
-	outColor = vec4((diffuseLight * fragColor + specularLight * fragColor) * imageColor, 1.0);
+	outColor = vec4((diffuseLight * fragColor + specularLight * fragColor)* imageColor, 1.0);
 }

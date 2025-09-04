@@ -11,20 +11,26 @@
 
 namespace bve {
 	BveTexture::BveTexture(BveDevice& device, const std::string& filepath) : bveDevice{ device } {
-		int channels;
-		int bytesPerPixel;
+		int texWidth, texHeight, texChannels;
 
-		stbi_uc* data = stbi_load(filepath.c_str(), &width, &height, &bytesPerPixel, 4);
+		stbi_uc* data = stbi_load(filepath.c_str(), &texWidth, &texHeight, &texChannels, 4);
 
+		if (!data) {
+			throw std::runtime_error("failed to load texture image!");
+		}
+
+		width = static_cast<uint32_t>(texWidth);
+		height = static_cast<uint32_t>(texHeight);
 		mipLevels = std::floor(std::log2(std::max(width, height)));
 
 		BveBuffer stagingBuffer{ bveDevice, 4, 
-			static_cast<uint32_t>(width * height),
+			width * height,
 			VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
 			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT};
 
 		stagingBuffer.map();
 		stagingBuffer.writeToBuffer(data);
+		stbi_image_free(data);
 
 		imageFormat = VK_FORMAT_R8G8B8A8_SRGB;
 
@@ -38,20 +44,20 @@ namespace bve {
 		imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
 		imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 		imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-		imageInfo.extent = {static_cast<uint32_t>(width), static_cast<uint32_t>(height),1 };
+		imageInfo.extent = {width, height,1 };
 		imageInfo.usage = VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
 
 		bveDevice.createImageWithInfo(imageInfo, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, image, imageMemory);
 
 		transitionImageLayout(VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
 
-		bveDevice.copyBufferToImage(stagingBuffer.getBuffer(), image, static_cast<uint32_t>(width), static_cast<uint32_t>(height), 1);
+		bveDevice.copyBufferToImage(stagingBuffer.getBuffer(), image, width, height, 1);
 
-		//transitionImageLayout(VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 		generateMipmaps();
 
 		imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 
+		float maxAnisotropy = bveDevice.properties.limits.maxSamplerAnisotropy;
 		VkSamplerCreateInfo samplerInfo{};
 		samplerInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
 		samplerInfo.magFilter = VK_FILTER_NEAREST;
@@ -64,14 +70,17 @@ namespace bve {
 		samplerInfo.compareOp = VK_COMPARE_OP_NEVER;
 		samplerInfo.minLod = 0.0f;
 		samplerInfo.maxLod = 0.0f;
-		samplerInfo.maxAnisotropy = 4.f;
+		samplerInfo.maxAnisotropy = maxAnisotropy;
 		samplerInfo.anisotropyEnable = VK_TRUE;
-		samplerInfo.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
+		samplerInfo.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK;
+		samplerInfo.unnormalizedCoordinates = VK_FALSE;
+
 		
 		vkCreateSampler(bveDevice.device(), &samplerInfo, nullptr, &sampler);
 
 		VkImageViewCreateInfo imageViewInfo{};
 		imageViewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+		imageViewInfo.image = image;
 		imageViewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
 		imageViewInfo.format = imageFormat;
 		imageViewInfo.components = { VK_COMPONENT_SWIZZLE_R, VK_COMPONENT_SWIZZLE_G, VK_COMPONENT_SWIZZLE_B, VK_COMPONENT_SWIZZLE_A };
@@ -80,11 +89,11 @@ namespace bve {
 		imageViewInfo.subresourceRange.baseArrayLayer = 0;
 		imageViewInfo.subresourceRange.layerCount = 1;
 		imageViewInfo.subresourceRange.levelCount = mipLevels;
-		imageViewInfo.image = image;
 
-		vkCreateImageView(bveDevice.device(), &imageViewInfo, nullptr, &imageView);
+		if (vkCreateImageView(bveDevice.device(), &imageViewInfo, nullptr, &imageView) != VK_SUCCESS) {
+			throw std::runtime_error("failed to create texture image view!");
+		}
 
-		stbi_image_free(data);
 
 	}
 	BveTexture::~BveTexture()
@@ -131,7 +140,13 @@ namespace bve {
 		else {
 			throw std::runtime_error("unsupported layout transition!");
 		}
-		vkCmdPipelineBarrier(commandBuffer, sourceStage, destinationStage, 0, 0, nullptr, 0, nullptr, 1, &barrier);
+		vkCmdPipelineBarrier(
+			commandBuffer, 
+			sourceStage, destinationStage, 
+			0, 
+			0, nullptr, 
+			0, nullptr, 
+			1, &barrier);
 
 		bveDevice.endSingleTimeCommands(commandBuffer);
 	}

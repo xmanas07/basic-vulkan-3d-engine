@@ -184,7 +184,7 @@ namespace bve {
 
 		for (int i = 0; i < lightColors.size(); i++)
 		{
-			auto pointLight = BveGameObject::makePointLight(0.2f);
+			auto pointLight = BveGameObject::makePointLight(.5f);
 			pointLight.color = lightColors[i];
 			auto rotateLight = glm::rotate(glm::mat4(1.f), (i * glm::two_pi<float>()) / lightColors.size(), { 0.f, -1.f,0.f });
 			pointLight.transform.translation = glm::vec3(rotateLight * glm::vec4(-1.f, -1.f, -1.f, -1.f));

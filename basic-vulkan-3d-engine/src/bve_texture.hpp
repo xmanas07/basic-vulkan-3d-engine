@@ -24,7 +24,7 @@ namespace bve {
         void transitionImageLayout(VkImageLayout oldLayout, VkImageLayout newLayout);
         void generateMipmaps();
 
-        int width, height, mipLevels;
+        uint32_t width, height, mipLevels;
 
         BveDevice& bveDevice;
         VkImage image;
