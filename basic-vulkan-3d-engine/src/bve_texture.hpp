@@ -17,7 +17,6 @@ namespace bve {
         BveTexture &operator= (BveTexture&&) = delete;
         ~BveTexture();
 
-        VkSampler getSampler() { return sampler; }
         VkImageView getImageView() { return imageView; }
         VkImageLayout getImageLayout() { return imageLayout; }
     private:
@@ -30,7 +29,6 @@ namespace bve {
         VkImage image;
         VkDeviceMemory imageMemory;
         VkImageView imageView;
-        VkSampler sampler;
         VkFormat imageFormat;
         VkImageLayout imageLayout;
     };

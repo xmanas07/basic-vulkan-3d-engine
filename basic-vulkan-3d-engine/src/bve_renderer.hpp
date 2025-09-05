@@ -22,6 +22,7 @@ namespace bve {
 
 		VkRenderPass getSwapchainRenderPass() const { return bveSwapChain->getRenderPass(); }
 		float getAspectRatio() const { return bveSwapChain->extentAspectRatio(); }
+		VkSampler getSampler() const { return sampler; }
 		bool isFrameInProgress() const { return isFrameStarted; }
 
 		VkCommandBuffer getCurrentCommandBuffer() const {
@@ -42,9 +43,11 @@ namespace bve {
 		void createCommandBuffers();
 		void freeCommandBuffers();
 		void recreateSwapChain();
+		void createSampler();
 
 		BveWindow& bveWindow;
 		BveDevice& bveDevice;
+		VkSampler sampler;
 		std::unique_ptr<BveSwapChain> bveSwapChain;
 		std::vector<VkCommandBuffer> commandBuffers;
 

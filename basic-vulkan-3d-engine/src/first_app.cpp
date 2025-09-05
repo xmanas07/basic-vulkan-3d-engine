@@ -58,7 +58,7 @@ namespace bve {
 		BveTexture texture = BveTexture(bveDevice, "src/textures/RohlikSpaceX.png");
 
 		VkDescriptorImageInfo imageInfo{};
-		imageInfo.sampler = texture.getSampler();
+		imageInfo.sampler = bveRenderer.getSampler();
 		imageInfo.imageView = texture.getImageView();
 		imageInfo.imageLayout = texture.getImageLayout();
 

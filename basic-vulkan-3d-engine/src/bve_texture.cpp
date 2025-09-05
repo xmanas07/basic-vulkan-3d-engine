@@ -21,7 +21,7 @@ namespace bve {
 
 		width = static_cast<uint32_t>(texWidth);
 		height = static_cast<uint32_t>(texHeight);
-		mipLevels = std::floor(std::log2(std::max(width, height)));
+		mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(width, height))));
 
 		BveBuffer stagingBuffer{ bveDevice, 4, 
 			width * height,
@@ -57,27 +57,7 @@ namespace bve {
 
 		imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 
-		float maxAnisotropy = bveDevice.properties.limits.maxSamplerAnisotropy;
-		VkSamplerCreateInfo samplerInfo{};
-		samplerInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
-		samplerInfo.magFilter = VK_FILTER_NEAREST;
-		samplerInfo.minFilter = VK_FILTER_NEAREST;
-		samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
-		samplerInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-		samplerInfo.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-		samplerInfo.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-		samplerInfo.mipLodBias = 0.0f;
-		samplerInfo.compareOp = VK_COMPARE_OP_NEVER;
-		samplerInfo.minLod = 0.0f;
-		samplerInfo.maxLod = 0.0f;
-		samplerInfo.maxAnisotropy = maxAnisotropy;
-		samplerInfo.anisotropyEnable = VK_TRUE;
-		samplerInfo.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK;
-		samplerInfo.unnormalizedCoordinates = VK_FALSE;
-
 		
-		vkCreateSampler(bveDevice.device(), &samplerInfo, nullptr, &sampler);
-
 		VkImageViewCreateInfo imageViewInfo{};
 		imageViewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
 		imageViewInfo.image = image;
@@ -101,7 +81,6 @@ namespace bve {
 		vkDestroyImage(bveDevice.device(), image, nullptr);
 		vkFreeMemory(bveDevice.device(), imageMemory, nullptr);
 		vkDestroyImageView(bveDevice.device(), imageView, nullptr);
-		vkDestroySampler(bveDevice.device(), sampler, nullptr);
 	}
 	void BveTexture::transitionImageLayout(VkImageLayout oldLayout, VkImageLayout newLayout)
 	{

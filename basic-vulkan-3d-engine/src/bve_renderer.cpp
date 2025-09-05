@@ -15,8 +15,13 @@ namespace bve {
 	{
 		recreateSwapChain();
 		createCommandBuffers();
+		createSampler();
 	}
-	BveRenderer::~BveRenderer() { freeCommandBuffers(); }
+	BveRenderer::~BveRenderer() { 
+		freeCommandBuffers(); 
+		vkDestroySampler(bveDevice.device(), sampler, nullptr);
+
+	}
 
 	void BveRenderer::recreateSwapChain()
 	{
@@ -38,6 +43,28 @@ namespace bve {
 		}
 
 		// if render pass compatible do nothing else
+	}
+	void BveRenderer::createSampler()
+	{
+		float maxAnisotropy = bveDevice.properties.limits.maxSamplerAnisotropy;
+		VkSamplerCreateInfo samplerInfo{};
+		samplerInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
+		samplerInfo.magFilter = VK_FILTER_NEAREST;
+		samplerInfo.minFilter = VK_FILTER_NEAREST;
+		samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
+		samplerInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+		samplerInfo.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+		samplerInfo.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+		samplerInfo.mipLodBias = 0.0f;
+		samplerInfo.compareOp = VK_COMPARE_OP_NEVER;
+		samplerInfo.minLod = 0.0f;
+		samplerInfo.maxLod = 0.0f;
+		samplerInfo.maxAnisotropy = maxAnisotropy;
+		samplerInfo.anisotropyEnable = VK_TRUE;
+		samplerInfo.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK;
+		samplerInfo.unnormalizedCoordinates = VK_FALSE;
+
+		vkCreateSampler(bveDevice.device(), &samplerInfo, nullptr, &sampler);
 	}
 	void BveRenderer::createCommandBuffers()
 	{
