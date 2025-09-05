@@ -174,7 +174,7 @@ namespace bve {
 				if (index.texcoord_index >= 0) {
 					vertex.uv = {
 						attrib.texcoords[2 * index.texcoord_index + 0],
-						attrib.texcoords[2 * index.texcoord_index + 1]
+						1.f - attrib.texcoords[2 * index.texcoord_index + 1]
 					};
 				}
 

@@ -57,8 +57,8 @@ namespace bve {
 		samplerInfo.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT;
 		samplerInfo.mipLodBias = 0.0f;
 		samplerInfo.compareOp = VK_COMPARE_OP_NEVER;
-		samplerInfo.minLod = 0.0f;
-		samplerInfo.maxLod = 0.0f;
+		samplerInfo.minLod = 0.f;
+		samplerInfo.maxLod = VK_LOD_CLAMP_NONE;
 		samplerInfo.maxAnisotropy = maxAnisotropy;
 		samplerInfo.anisotropyEnable = VK_TRUE;
 		samplerInfo.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK;

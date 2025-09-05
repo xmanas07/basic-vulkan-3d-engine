@@ -55,7 +55,7 @@ namespace bve {
 			.addBinding(1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT)
 			.build();
 
-		BveTexture texture = BveTexture(bveDevice, "src/textures/RohlikSpaceX.png");
+		BveTexture texture = BveTexture(bveDevice, "src/textures/viking_room.png");
 
 		VkDescriptorImageInfo imageInfo{};
 		imageInfo.sampler = bveRenderer.getSampler();
@@ -172,6 +172,14 @@ namespace bve {
 		floor.transform.scale = { 3.f,1.f,3.f };
 		gameObjects.emplace(floor.getId(), std::move(floor));
 
+		bveModel = BveModel::createModelFromFile(bveDevice, "src/models/viking_room.obj");
+		auto vikingRoom = BveGameObject::createGameObject();
+		vikingRoom.model = bveModel;
+		vikingRoom.transform.translation = { .0f,.0f,5.0f };
+		vikingRoom.transform.scale = { 1.f,1.f,1.f };
+		vikingRoom.transform.rotation = { 1.57f,3.14f,0.f };
+		gameObjects.emplace(vikingRoom.getId(), std::move(vikingRoom));
+
 
 		std::vector<glm::vec3> lightColors{
 		  {1.f, .1f, .1f},
@@ -184,10 +192,10 @@ namespace bve {
 
 		for (int i = 0; i < lightColors.size(); i++)
 		{
-			auto pointLight = BveGameObject::makePointLight(.5f);
+			auto pointLight = BveGameObject::makePointLight(1.f);
 			pointLight.color = lightColors[i];
-			auto rotateLight = glm::rotate(glm::mat4(1.f), (i * glm::two_pi<float>()) / lightColors.size(), { 0.f, -1.f,0.f });
-			pointLight.transform.translation = glm::vec3(rotateLight * glm::vec4(-1.f, -1.f, -1.f, -1.f));
+			auto rotateLight = glm::rotate(glm::mat4(1.f), (i * glm::two_pi<float>()) / lightColors.size(), { 0.f, 1.f,0.f });
+			pointLight.transform.translation = glm::vec3(rotateLight * glm::vec4(-2.f, -2.f, -2.f, -2.f));
 			gameObjects.emplace(pointLight.getId(), std::move(pointLight));
 		}
 	}
