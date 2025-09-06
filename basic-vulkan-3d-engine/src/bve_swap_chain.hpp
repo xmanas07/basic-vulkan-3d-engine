@@ -48,6 +48,7 @@ class BveSwapChain {
   void init();
   void createSwapChain();
   void createImageViews();
+  void createColorResources();
   void createDepthResources();
   void createRenderPass();
   void createFramebuffers();
@@ -72,6 +73,9 @@ class BveSwapChain {
   std::vector<VkImageView> depthImageViews;
   std::vector<VkImage> swapChainImages;
   std::vector<VkImageView> swapChainImageViews;
+  VkImage colorImage;
+  VkDeviceMemory colorImageMemory;
+  VkImageView colorImageView;
 
   BveDevice &device;
   VkExtent2D windowExtent;

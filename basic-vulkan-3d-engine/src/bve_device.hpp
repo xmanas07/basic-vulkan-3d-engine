@@ -47,6 +47,8 @@ public:
   VkQueue presentQueue() { return presentQueue_; }
 
   SwapChainSupportDetails getSwapChainSupport() { return querySwapChainSupport(physicalDevice); }
+  VkSampleCountFlagBits getMaxUsableSampleCount();
+  VkSampleCountFlagBits getMsaaSampleCount() { return msaaSampleCount; }
   uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
   QueueFamilyIndices findPhysicalQueueFamilies() { return findQueueFamilies(physicalDevice); }
   VkFormat findSupportedFormat(
@@ -70,6 +72,7 @@ public:
       VkMemoryPropertyFlags properties,
       VkImage &image,
       VkDeviceMemory &imageMemory);
+  void createImageViewWithInfo(const VkImageViewCreateInfo& viewInfo, VkImageView& imageView);
 
   VkPhysicalDeviceProperties properties;
 
@@ -96,6 +99,7 @@ public:
   VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
   BveWindow &window;
   VkCommandPool commandPool;
+  VkSampleCountFlagBits msaaSampleCount;
 
   VkDevice device_;
   VkSurfaceKHR surface_;

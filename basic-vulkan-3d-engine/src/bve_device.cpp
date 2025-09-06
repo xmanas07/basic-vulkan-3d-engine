@@ -122,6 +122,7 @@ void BveDevice::pickPhysicalDevice() {
   for (const auto &device : devices) {
     if (isDeviceSuitable(device)) {
       physicalDevice = device;
+      msaaSampleCount = getMaxUsableSampleCount();
       break;
     }
   }
@@ -391,6 +392,22 @@ VkFormat BveDevice::findSupportedFormat(
   throw std::runtime_error("failed to find supported format!");
 }
 
+VkSampleCountFlagBits BveDevice::getMaxUsableSampleCount()
+{
+    VkPhysicalDeviceProperties physicalDeviceProperties;
+    vkGetPhysicalDeviceProperties(physicalDevice, &physicalDeviceProperties);
+
+    VkSampleCountFlags counts = physicalDeviceProperties.limits.framebufferColorSampleCounts & physicalDeviceProperties.limits.framebufferDepthSampleCounts;
+    if (counts & VK_SAMPLE_COUNT_64_BIT) { return VK_SAMPLE_COUNT_64_BIT; }
+    if (counts & VK_SAMPLE_COUNT_32_BIT) { return VK_SAMPLE_COUNT_32_BIT; }
+    if (counts & VK_SAMPLE_COUNT_16_BIT) { return VK_SAMPLE_COUNT_16_BIT; }
+    if (counts & VK_SAMPLE_COUNT_8_BIT) { return VK_SAMPLE_COUNT_8_BIT; }
+    if (counts & VK_SAMPLE_COUNT_4_BIT) { return VK_SAMPLE_COUNT_4_BIT; }
+    if (counts & VK_SAMPLE_COUNT_2_BIT) { return VK_SAMPLE_COUNT_2_BIT; }
+
+    return VK_SAMPLE_COUNT_1_BIT;
+}
+
 uint32_t BveDevice::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) {
   VkPhysicalDeviceMemoryProperties memProperties;
   vkGetPhysicalDeviceMemoryProperties(physicalDevice, &memProperties);
@@ -530,6 +547,17 @@ void BveDevice::createImageWithInfo(
   if (vkBindImageMemory(device_, image, imageMemory, 0) != VK_SUCCESS) {
     throw std::runtime_error("failed to bind image memory!");
   }
+}
+
+void BveDevice::createImageViewWithInfo(const VkImageViewCreateInfo& viewInfo, VkImageView& imageView)
+{
+
+    if (vkCreateImageView(device_, &viewInfo, nullptr, &imageView) !=
+        VK_SUCCESS) {
+        throw std::runtime_error("failed to create texture image view!");
+    }
+        
+    
 }
 
 }  // namespace bve

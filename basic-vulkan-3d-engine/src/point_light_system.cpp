@@ -59,6 +59,7 @@ namespace bve {
 		PipelineConfigInfo pipelineConfig{};
 		BvePipeline::defaultPipelineConfigInfo(pipelineConfig);
 		BvePipeline::enableAlphaBlending(pipelineConfig);
+		pipelineConfig.multisampleInfo.rasterizationSamples = bveDevice.getMsaaSampleCount();
 		pipelineConfig.attributeDescriptions.clear();
 		pipelineConfig.bindingDescriptions.clear();
 		pipelineConfig.renderPass = renderPass;
