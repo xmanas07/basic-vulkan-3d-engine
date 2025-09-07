@@ -57,6 +57,8 @@ namespace bve {
 		PipelineConfigInfo pipelineConfig{};
 		BvePipeline::defaultPipelineConfigInfo(pipelineConfig);
 		pipelineConfig.multisampleInfo.rasterizationSamples = bveDevice.getMsaaSampleCount();
+		pipelineConfig.multisampleInfo.sampleShadingEnable = VK_TRUE;
+		pipelineConfig.multisampleInfo.minSampleShading = 1.f;
 		pipelineConfig.renderPass = renderPass;
 		pipelineConfig.pipelineLayout = pipelineLayout;
 		bvePipeline = std::make_unique<BvePipeline>(bveDevice, "src/shaders/output-files/simple_shader.vert.spv", "src/shaders/output-files/simple_shader.frag.spv", pipelineConfig);
