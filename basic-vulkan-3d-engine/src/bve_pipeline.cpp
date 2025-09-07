@@ -214,14 +214,4 @@ namespace bve {
 		configInfo.colorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;  
 		configInfo.colorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD;              
 	}
-	void BvePipeline::enableMultisampling(VkSampleCountFlagBits msaaSamples, PipelineConfigInfo& configInfo)
-	{
-		configInfo.multisampleInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
-		configInfo.multisampleInfo.sampleShadingEnable = VK_FALSE;
-		configInfo.multisampleInfo.rasterizationSamples = msaaSamples;
-		configInfo.multisampleInfo.minSampleShading = 1.0f;           // Optional
-		configInfo.multisampleInfo.pSampleMask = nullptr;             // Optional
-		configInfo.multisampleInfo.alphaToCoverageEnable = VK_FALSE;  // Optional
-		configInfo.multisampleInfo.alphaToOneEnable = VK_FALSE;       // Optional
-	}
 }

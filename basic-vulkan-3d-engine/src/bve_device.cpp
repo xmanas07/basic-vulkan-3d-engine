@@ -554,7 +554,7 @@ void BveDevice::createImageViewWithInfo(const VkImageViewCreateInfo& viewInfo, V
 
     if (vkCreateImageView(device_, &viewInfo, nullptr, &imageView) !=
         VK_SUCCESS) {
-        throw std::runtime_error("failed to create texture image view!");
+        throw std::runtime_error("failed to create image view!");
     }
         
     
