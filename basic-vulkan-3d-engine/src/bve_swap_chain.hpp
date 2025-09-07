@@ -73,9 +73,9 @@ class BveSwapChain {
   std::vector<VkImageView> depthImageViews;
   std::vector<VkImage> swapChainImages;
   std::vector<VkImageView> swapChainImageViews;
-  VkImage colorImage;
-  VkDeviceMemory colorImageMemory;
-  VkImageView colorImageView;
+  std::vector<VkImage> colorImages;
+  std::vector<VkDeviceMemory> colorImageMemorys;
+  std::vector<VkImageView> colorImageViews;
 
   BveDevice &device;
   VkExtent2D windowExtent;
